@@ -1,0 +1,38 @@
+{
+  "name": "back-end---ecofood",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+"scripts": {
+  "start": "node dist/server.js",
+  "dev": "tsx --watch src/server.ts",
+  "build": "tsc"
+},
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/LaviBispo/BACK-END---ECOFOOD.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/LaviBispo/BACK-END---ECOFOOD/issues"
+  },
+  "homepage": "https://github.com/LaviBispo/BACK-END---ECOFOOD#readme",
+  "dependencies": {
+    "@prisma/adapter-better-sqlite3": "^7.10.0",
+    "@prisma/client": "^7.10.0",
+    "better-sqlite3": "^13.0.3",
+    "dotenv": "^17.4.2",
+    "express": "^5.2.1"
+  },
+  "devDependencies": {
+    "@types/better-sqlite3": "^9.6.0",
+    "@types/express": "^5.0.6",
+    "@types/node": "^26.5.1",
+    "prisma": "^7.10.0",
+    "tsx": "^4.23.13",
+    "typescript": "^7.0.2"
+  }
+}
