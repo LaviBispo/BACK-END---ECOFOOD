@@ -1,0 +1,101 @@
+// ============================================================
+// Ecofood - schema.prisma
+// Banco: SQLite (arquivo local, sem precisar instalar servidor)
+//
+// Obs: o SQLite não suporta "enum" no Prisma, por isso os campos
+// que antes eram enum (categoria, local, status) agora são String.
+// A validação desses valores é feita no código (nos controllers).
+// ============================================================
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model Restaurant {
+  id          Int      @id @default(autoincrement())
+  name        String
+  cuisineType String
+  address     String
+  phone       String
+  email       String?
+  cnpj        String   @unique
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  users        User[]
+  products     Product[]
+  shoppingList ShoppingListItem[]
+  impactLogs   ImpactLog[]
+
+  @@map("restaurants")
+}
+
+model User {
+  id           Int        @id @default(autoincrement())
+  name         String
+  email        String     @unique
+  passwordHash String
+  role         String     @default("OWNER")
+  restaurantId Int
+  restaurant   Restaurant @relation(fields: [restaurantId], references: [id], onDelete: Cascade)
+  createdAt    DateTime   @default(now())
+  updatedAt    DateTime   @updatedAt
+
+  @@map("users")
+}
+
+model Product {
+  id              Int        @id @default(autoincrement())
+  name            String
+  barcode         String?
+  category        String
+  storageLocation String
+  quantity        Float      @default(1)
+  unit            String     @default("un")
+  unitPrice       Float?
+  supplier        String?
+  expirationDate  DateTime
+  status          String     @default("ATIVO")
+  restaurantId    Int
+  restaurant      Restaurant @relation(fields: [restaurantId], references: [id], onDelete: Cascade)
+  createdAt       DateTime   @default(now())
+  updatedAt       DateTime   @updatedAt
+
+  impactLogs ImpactLog[]
+
+  @@map("products")
+}
+
+model ImpactLog {
+  id             Int        @id @default(autoincrement())
+  productId      Int
+  product        Product    @relation(fields: [productId], references: [id], onDelete: Cascade)
+  restaurantId   Int
+  restaurant     Restaurant @relation(fields: [restaurantId], references: [id], onDelete: Cascade)
+  quantityKg     Float
+  estimatedValue Float
+  wasReduced     Boolean
+  createdAt      DateTime   @default(now())
+
+  @@map("impact_logs")
+}
+
+model ShoppingListItem {
+  id           Int        @id @default(autoincrement())
+  name         String
+  category     String?
+  quantity     Float      @default(1)
+  unit         String     @default("un")
+  priority     Boolean    @default(false)
+  purchased    Boolean    @default(false)
+  restaurantId Int
+  restaurant   Restaurant @relation(fields: [restaurantId], references: [id], onDelete: Cascade)
+  createdAt    DateTime   @default(now())
+
+  @@map("shopping_list_items")
+}
