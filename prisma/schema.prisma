@@ -4,7 +4,7 @@
 // Get a free hosted Postgres database in seconds: `npx create-db`
 
 generator client {
-  provider = "prisma-client"
+  provider = "prisma-client-js"
   output   = "../generated/prisma"
 }
 
@@ -12,86 +12,85 @@ datasource db {
   provider = "sqlite"
 }
 
-model Restaurant {
-  id          Int      @id @default(autoincrement())
-  name        String
-  cuisineType String
-  address     String
-  phone       String
-  email       String?
-  cnpj        String   @unique
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
- 
-  users        User[]
-  products     Product[]
-  shoppingList ShoppingListItem[]
-  impactLogs   ImpactLog[]
- 
-  @@map("restaurants")
+model Restaurante {
+  id           Int      @id @default(autoincrement())
+  nome         String
+  tipoCozinha  String
+  endereco     String
+  telefone     String
+  email        String?
+  cnpj         String   @unique
+  criadoEm     DateTime @default(now())
+  atualizadoEm DateTime @updatedAt
+  usuarios          Usuario[]
+  produtos          Produto[]
+  itensListaCompras ItemListaCompras[]
+  registrosImpacto  RegistroImpacto[]
+
+  @@map("restaurantes")
 }
- 
-model User {
-  id           Int        @id @default(autoincrement())
-  name         String
-  email        String     @unique
-  passwordHash String
-  role         String     @default("OWNER")
-  restaurantId Int
-  restaurant   Restaurant @relation(fields: [restaurantId], references: [id], onDelete: Cascade)
-  createdAt    DateTime   @default(now())
-  updatedAt    DateTime   @updatedAt
- 
-  @@map("users")
+
+model Usuario {
+  id            Int         @id @default(autoincrement())
+  nome          String
+  email         String      @unique
+  senhaHash     String
+  cargo         String      @default("DONO")
+  restauranteId Int
+  restaurante   Restaurante @relation(fields: [restauranteId], references: [id], onDelete: Cascade)
+  criadoEm      DateTime    @default(now())
+  atualizadoEm  DateTime    @updatedAt
+
+  @@map("usuarios")
 }
- 
-model Product {
-  id              Int        @id @default(autoincrement())
-  name            String
-  barcode         String?
-  category        String
-  storageLocation String
-  quantity        Float      @default(1)
-  unit            String     @default("un")
-  unitPrice       Float?
-  supplier        String?
-  expirationDate  DateTime
-  status          String     @default("ATIVO")
-  restaurantId    Int
-  restaurant      Restaurant @relation(fields: [restaurantId], references: [id], onDelete: Cascade)
-  createdAt       DateTime   @default(now())
-  updatedAt       DateTime   @updatedAt
- 
-  impactLogs ImpactLog[]
- 
-  @@map("products")
+
+model Produto {
+  id                 Int         @id @default(autoincrement())
+  nome               String
+  codigoBarras       String?
+  categoria          String
+  localArmazenamento String
+  quantidade         Float       @default(1)
+  unidade            String      @default("un")
+  precoUnitario      Float?
+  fornecedor         String?
+  dataValidade       DateTime
+  situacao           String      @default("ATIVO")
+  restauranteId      Int
+  restaurante        Restaurante @relation(fields: [restauranteId], references: [id], onDelete: Cascade)
+  criadoEm           DateTime    @default(now())
+  atualizadoEm       DateTime    @updatedAt
+
+  registrosImpacto RegistroImpacto[]
+
+  @@map("produtos")
 }
- 
-model ImpactLog {
-  id             Int        @id @default(autoincrement())
-  productId      Int
-  product        Product    @relation(fields: [productId], references: [id], onDelete: Cascade)
-  restaurantId   Int
-  restaurant     Restaurant @relation(fields: [restaurantId], references: [id], onDelete: Cascade)
-  quantityKg     Float
-  estimatedValue Float
-  wasReduced     Boolean
-  createdAt      DateTime   @default(now())
- 
-  @@map("impact_logs")
+
+model RegistroImpacto {
+  id             Int         @id @default(autoincrement())
+  produtoId      Int
+  produto        Produto     @relation(fields: [produtoId], references: [id], onDelete: Cascade)
+  restauranteId  Int
+  restaurante    Restaurante @relation(fields: [restauranteId], references: [id], onDelete: Cascade)
+  quantidadeKg   Float
+  valorEstimado  Float
+  foiAproveitado Boolean
+  criadoEm       DateTime    @default(now())
+
+  @@map("registros_impacto")
 }
- 
-model ShoppingListItem {
-  id           Int        @id @default(autoincrement())
-  name         String
-  category     String?
-  quantity     Float      @default(1)
-  unit         String     @default("un")
-  priority     Boolean    @default(false)
-  purchased    Boolean    @default(false)
-  restaurantId Int
-  restaurant   Restaurant @relation(fields: [restaurantId], references: [id], onDelete: Cascade)
-  createdAt    DateTime   @default(now())
- 
-  @@map("shopping_list_items")
+
+model ItemListaCompras {
+  id            Int         @id @default(autoincrement())
+  nome          String
+  categoria     String?
+  quantidade    Float       @default(1)
+  unidade       String      @default("un")
+  prioridade    Boolean     @default(false)
+  comprado      Boolean     @default(false)
+  restauranteId Int
+  restaurante   Restaurante @relation(fields: [restauranteId], references: [id], onDelete: Cascade)
+  criadoEm      DateTime    @default(now())
+
+  @@map("itens_lista_compras")
 }
