@@ -12,85 +12,77 @@ datasource db {
   provider = "sqlite"
 }
 
-model Restaurante {
-  id           Int      @id @default(autoincrement())
-  nome         String
-  tipoCozinha  String
-  endereco     String
-  telefone     String
-  email        String?
-  cnpj         String   @unique
-  criadoEm     DateTime @default(now())
-  atualizadoEm DateTime @updatedAt
-  usuarios          Usuario[]
-  produtos          Produto[]
+model RestauranteCadastro {
+  id               Int                 @id @default(autoincrement())
+  nome             String
+  endereco         String
+  telefone         String
+  email            String
+  cnpj             String              @unique
+  atualizadoEm     DateTime            @updatedAt
+  usuarios         UsuarioPerfil[]
+  produtos         Produto[]
   itensListaCompras ItemListaCompras[]
-  registrosImpacto  RegistroImpacto[]
+  registrosImpacto RegistroImpacto[]
 
   @@map("restaurantes")
 }
 
-model Usuario {
-  id            Int         @id @default(autoincrement())
+model UsuarioPerfil {
+  id            Int      @id @default(autoincrement())
   nome          String
-  email         String      @unique
-  senhaHash     String
-  cargo         String      @default("DONO")
+  fotoUrl          String?
+  email         String   @unique
+  senha         String
   restauranteId Int
-  restaurante   Restaurante @relation(fields: [restauranteId], references: [id], onDelete: Cascade)
-  criadoEm      DateTime    @default(now())
-  atualizadoEm  DateTime    @updatedAt
+  restaurante    RestauranteCadastro @relation(fields: [restauranteId], references: [id])
+  atualizadoEm  DateTime @updatedAt
 
   @@map("usuarios")
 }
 
 model Produto {
-  id                 Int         @id @default(autoincrement())
+  id                 Int      @id @default(autoincrement())
   nome               String
   codigoBarras       String?
-  categoria          String
   localArmazenamento String
-  quantidade         Float       @default(1)
-  unidade            String      @default("un")
-  precoUnitario      Float?
-  fornecedor         String?
+  quantidade         Float    @default(1)
+  unidade            String   @default("un")
   dataValidade       DateTime
-  situacao           String      @default("ATIVO")
+  status             String   @default("ATIVO")
   restauranteId      Int
-  restaurante        Restaurante @relation(fields: [restauranteId], references: [id], onDelete: Cascade)
-  criadoEm           DateTime    @default(now())
-  atualizadoEm       DateTime    @updatedAt
-
-  registrosImpacto RegistroImpacto[]
+  restaurante        RestauranteCadastro @relation(fields: [restauranteId], references: [id])
+  registrosImpacto   RegistroImpacto[]
+  deuEntradaEm           DateTime @default(now())
+  atualizadoEm       DateTime @updatedAt
 
   @@map("produtos")
 }
 
 model RegistroImpacto {
-  id             Int         @id @default(autoincrement())
+  id             Int      @id @default(autoincrement())
   produtoId      Int
-  produto        Produto     @relation(fields: [produtoId], references: [id], onDelete: Cascade)
+  produto        Produto  @relation(fields: [produtoId], references: [id])
   restauranteId  Int
-  restaurante    Restaurante @relation(fields: [restauranteId], references: [id], onDelete: Cascade)
+  restaurante    RestauranteCadastro @relation(fields: [restauranteId], references: [id])
   quantidadeKg   Float
-  valorEstimado  Float
   foiAproveitado Boolean
-  criadoEm       DateTime    @default(now())
+  criadoEm       DateTime @default(now())
 
   @@map("registros_impacto")
 }
 
 model ItemListaCompras {
-  id            Int         @id @default(autoincrement())
+  id            Int      @id @default(autoincrement())
   nome          String
   categoria     String?
-  quantidade    Float       @default(1)
-  unidade       String      @default("un")
-  prioridade    Boolean     @default(false)
-  comprado      Boolean     @default(false)
+  quantidade    Float    @default(1)
+  unidade       String   @default("un")
+  prioridade    Boolean  @default(false)
+  comprado      Boolean  @default(false)
   restauranteId Int
-  restaurante   Restaurante @relation(fields: [restauranteId], references: [id], onDelete: Cascade)
-  criadoEm      DateTime    @default(now())
+  restaurante   RestauranteCadastro @relation(fields: [restauranteId], references: [id])
+  criadoEm      DateTime @default(now())
 
   @@map("itens_lista_compras")
 }
