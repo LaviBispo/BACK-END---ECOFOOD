@@ -45,7 +45,8 @@ router.post("/", async (req: Request, res: Response) => {
                 unitPrice,
                 supplier,
                 expirationDate: new Date(expirationDate),
-                restaurantId
+                restaurantId,
+                deuEntradaEm: new Date()
             }
         })
         res.status(201).json(produto)
