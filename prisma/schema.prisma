@@ -10,79 +10,81 @@ generator client {
 
 datasource db {
   provider = "sqlite"
+ 
 }
 
 model RestauranteCadastro {
-  id               Int                 @id @default(autoincrement())
-  nome             String
-  endereco         String
-  telefone         String
-  email            String
-  cnpj             String              @unique
-  atualizadoEm     DateTime            @updatedAt
-  usuarios         UsuarioPerfil[]
-  produtos         Produto[]
+  id                Int                @id @default(autoincrement())
+  name              String             @map("nome")
+  password          String             @map("senha")
+  endereco          String
+  telefone          String
+  email             String             @unique
+  cnpj              String             @unique
+  atualizadoEm      DateTime           @updatedAt
+  usuarios          UsuarioPerfil[]
+  produtos          Produto[]
   itensListaCompras ItemListaCompras[]
-  registrosImpacto RegistroImpacto[]
+  registrosImpacto  RegistroImpacto[]
 
   @@map("restaurantes")
 }
 
 model UsuarioPerfil {
-  id            Int      @id @default(autoincrement())
-  nome          String
-  fotoUrl          String?
-  email         String   @unique
-  senha         String
+  id            Int                 @id @default(autoincrement())
+  name          String              @map("nome")
+  fotoUrl       String?
+  email         String              @unique
+  password      String              @map("senha")
   restauranteId Int
-  restaurante    RestauranteCadastro @relation(fields: [restauranteId], references: [id])
-  atualizadoEm  DateTime @updatedAt
+  restaurante   RestauranteCadastro @relation(fields: [restauranteId], references: [id])
+  atualizadoEm  DateTime            @updatedAt
 
   @@map("usuarios")
 }
 
 model Produto {
-  id                 Int      @id @default(autoincrement())
+  id                 Int                 @id @default(autoincrement())
   nome               String
   codigoBarras       String?
   localArmazenamento String
-  quantidade         Float    @default(1)
-  unidade            String   @default("un")
+  quantidade         Float               @default(1)
+  unidade            String              @default("un")
   dataValidade       DateTime
-  status             String   @default("ATIVO")
+  status             String              @default("ATIVO")
   restauranteId      Int
   restaurante        RestauranteCadastro @relation(fields: [restauranteId], references: [id])
   registrosImpacto   RegistroImpacto[]
-  deuEntradaEm           DateTime @default(now())
-  atualizadoEm       DateTime @updatedAt
+  deuEntradaEm       DateTime            @default(now())
+  atualizadoEm       DateTime            @updatedAt
 
   @@map("produtos")
 }
 
 model RegistroImpacto {
-  id             Int      @id @default(autoincrement())
+  id             Int                 @id @default(autoincrement())
   produtoId      Int
-  produto        Produto  @relation(fields: [produtoId], references: [id])
+  produto        Produto             @relation(fields: [produtoId], references: [id])
   restauranteId  Int
   restaurante    RestauranteCadastro @relation(fields: [restauranteId], references: [id])
   quantidadeKg   Float
   foiAproveitado Boolean
-  criadoEm       DateTime @default(now())
+  criadoEm       DateTime            @default(now())
 
   @@map("registros_impacto")
 }
 
 model ItemListaCompras {
-  id            Int      @id @default(autoincrement())
+  id            Int                 @id @default(autoincrement())
   nome          String
   categoria     String?
-  quantidade    Float    @default(1)
-  unidade       String   @default("un")
-  prioridade    Boolean  @default(false)
-  comprado      Boolean  @default(false)
+  quantidade    Float               @default(1)
+  unidade       String              @default("un")
+  prioridade    Boolean             @default(false)
+  comprado      Boolean             @default(false)
   restauranteId Int
   restaurante   RestauranteCadastro @relation(fields: [restauranteId], references: [id])
-  criadoEm      DateTime @default(now())
+  criadoEm      DateTime            @default(now())
 
   @@map("itens_lista_compras")
 }
