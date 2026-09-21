@@ -5,49 +5,37 @@ const router = Router();
 
 router.post('/', async (req: Request, res: Response) => {
   try {
-    const {
-      nome,
-      endereco,
-      telefone,
-      email,
-      cnpj,
-      senha,
-    } = req.body;
+    const { email, senha } = req.body;
 
-    if (!nome || !endereco || !telefone || !email || !cnpj || !senha) {
+     if (!email || !senha) {
       return res.status(400).json({
-        error: 'Preencha todos os campos',
+        error: "Preencha email e senha",
       });
     }
 
-    const usuarioExistente = await prisma.restauranteCadastro.findFirst({
+    const usuario = await prisma.restauranteCadastro.findUnique({
       where: {
-        OR: [{ email }, { cnpj }],
+        email,
       },
     });
 
-    if (usuarioExistente) {
-      return res.status(409).json({
-        error: 'Email ou CNPJ já cadastrado',
+    if (!usuario) {
+      return res.status(404).json({
+        error: 'Restaurante não encontrado',
       });
     }
 
-    const usuario = await prisma.restauranteCadastro.create({
-      data: {
-        name: nome,
-        password: senha,
-        endereco,
-        telefone,
-        email,
-        cnpj,
-      },
-    });
+    if (usuario.password !== senha) {
+      return res.status(401).json({
+        error: 'Senha incorreta',
+      });
+    }
 
-    return res.status(201).json(usuario);
+    return res.status(200).json(usuario);
   } catch (error) {
     console.error(error);
     return res.status(500).json({
-      error: 'Erro ao registrar restaurante',
+      error: 'Erro ao fazer login',
     });
   }
 });
@@ -63,8 +51,10 @@ router.get("/", async (req: Request, res: Response) => {
         cnpj: true,
         telefone: true,
         endereco: true,
-      }
 
+        
+      }
+     
     });
 
     return res.status(200).json(usuarios);
