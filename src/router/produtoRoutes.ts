@@ -32,21 +32,20 @@ router.get("/:id", async (req: Request, res: Response) => {
 //cria um novo produto
 router.post("/", async (req: Request, res: Response) => {
     try {
-        const { name, barcode, category, storageLocation, quantity, unit, unitPrice, supplier, expirationDate, restaurantId } = req.body
+        const { nome, categoria, localArmazenamento, codigoBarras,  quantidade, unidade, dataValidade, restauranteId } = req.body
 
         const produto = await prisma.product.create({
             data: {
-                name,
-                barcode,
-                category,
-                storageLocation,
-                quantity,
-                unit,
-                unitPrice,
-                supplier,
-                expirationDate: new Date(expirationDate),
-                restaurantId,
-                deuEntradaEm: new Date()
+                nome,
+                categoria,
+                codigoBarras,
+                localArmazenamento,
+                quantidade,
+                unidade,
+                dataValidade: new Date(dataValidade),
+                restauranteId  
+
+  
             }
         })
         res.status(201).json(produto)
@@ -58,27 +57,48 @@ router.post("/", async (req: Request, res: Response) => {
 //atualiza um produto
 router.put("/:id", async (req: Request, res: Response) => {
     try {
-        const { name, barcode, category, storageLocation, quantity, unit, unitPrice, supplier, expirationDate, status } = req.body
+       const { nome, categoria, localArmazenamento, codigoBarras,  quantidade, unidade, dataValidade, restauranteId } = req.body
 
         const produto = await prisma.product.update({
             where: { id: Number(req.params.id) },
             data: {
-                name,
-                barcode,
-                category,
-                storageLocation,
-                quantity,
-                unit,
-                unitPrice,
-                supplier,
-                expirationDate: expirationDate ? new Date(expirationDate) : undefined,
-                status
+                nome,
+                codigoBarras,
+                categoria,
+                localArmazenamento,
+                quantidade,
+                unidade,
+                dataValidade: dataValidade ? new Date(dataValidade) : undefined,
+                restauranteId
+                
+
             }
         })
         res.json(produto)
     } catch (error) {
         res.status(500).json({ error: "erro interno do servidor" })
     }
+})
+
+//atualiza status
+
+router.patch("/produto/:id", async (req, res) => {
+    const id = Number(req.params.id)
+    const { status } = req.body
+ 
+    try {
+        const ProdutoAtualizado = await prisma.product.update({
+            where: { id },
+            data: {
+               status
+            }
+        })
+ 
+        return res.json(ProdutoAtualizado)
+    } catch (error) {
+        return res.status(404).json({ error: "Produto não encontrado" })
+    }
+ 
 })
 
 //deleta um produto
@@ -92,5 +112,7 @@ router.delete("/:id", async (req: Request, res: Response) => {
         res.status(500).json({ error: "erro interno do servidor" })
     }
 })
+
+// teste
 
 export default router
