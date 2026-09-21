@@ -4,37 +4,48 @@ import prisma from '../lib/prismaClient';
 const router = Router();
 
 //lista todos os produtos
-router.get("/", async (req: Request, res: Response) => {
+router.get('/', async (_req: Request, res: Response) => {
     try {
-        const produtos = await prisma.product.findMany()
-        res.json(produtos)
+        const produtos = await prisma.produto.findMany();
+        res.json(produtos);
     } catch (error) {
-        res.status(500).json({ error: "erro interno do servidor" })
+        res.status(500).json({ error: 'erro interno do servidor' });
     }
-})
+});
 
 //busca produto por id
-router.get("/:id", async (req: Request, res: Response) => {
+router.get('/:id', async (req: Request, res: Response) => {
     try {
-        const produto = await prisma.product.findUnique({
+        const produto = await prisma.produto.findUnique({
             where: { id: Number(req.params.id) }
-        })
+        });
 
         if (!produto) {
-            return res.status(404).json({ error: "produto nao encontrado" })
+            return res.status(404).json({ error: 'produto nao encontrado' });
         }
-        res.json(produto)
+
+        return res.json(produto);
     } catch (error) {
-        res.status(500).json({ error: "erro interno do servidor" })
+        return res.status(500).json({ error: 'erro interno do servidor' });
     }
-})
+});
 
 //cria um novo produto
-router.post("/", async (req: Request, res: Response) => {
+router.post('/', async (req: Request, res: Response) => {
     try {
-        const { nome, categoria, localArmazenamento, codigoBarras,  quantidade, unidade, dataValidade, restauranteId } = req.body
+        const {
+            nome,
+            categoria,
+            localArmazenamento,
+            codigoBarras,
+            quantidade,
+            unidade,
+            dataValidade,
+            restauranteId,
+            status
+        } = req.body;
 
-        const produto = await prisma.product.create({
+        const produto = await prisma.produto.create({
             data: {
                 nome,
                 categoria,
@@ -42,77 +53,83 @@ router.post("/", async (req: Request, res: Response) => {
                 localArmazenamento,
                 quantidade,
                 unidade,
-                dataValidade: new Date(dataValidade),
-                restauranteId  
-
-  
+                dataValidade: dataValidade ? new Date(dataValidade) : new Date(),
+                restauranteId: Number(restauranteId),
+                status: status ?? 'ATIVO'
             }
-        })
-        res.status(201).json(produto)
+        });
+
+        return res.status(201).json(produto);
     } catch (error) {
-        res.status(500).json({ error: "erro interno do servidor" })
+        return res.status(500).json({ error: 'erro interno do servidor' });
     }
-})
+});
 
 //atualiza um produto
-router.put("/:id", async (req: Request, res: Response) => {
+router.put('/:id', async (req: Request, res: Response) => {
     try {
-       const { nome, categoria, localArmazenamento, codigoBarras,  quantidade, unidade, dataValidade, restauranteId } = req.body
+        const {
+            nome,
+            categoria,
+            localArmazenamento,
+            codigoBarras,
+            quantidade,
+            unidade,
+            dataValidade,
+            restauranteId,
+            status
+        } = req.body;
 
-        const produto = await prisma.product.update({
+        const produto = await prisma.produto.update({
             where: { id: Number(req.params.id) },
             data: {
                 nome,
-                codigoBarras,
                 categoria,
+                codigoBarras,
                 localArmazenamento,
                 quantidade,
                 unidade,
                 dataValidade: dataValidade ? new Date(dataValidade) : undefined,
-                restauranteId
-                
-
+                restauranteId: restauranteId !== undefined ? Number(restauranteId) : undefined,
+                status
             }
-        })
-        res.json(produto)
+        });
+
+        return res.json(produto);
     } catch (error) {
-        res.status(500).json({ error: "erro interno do servidor" })
+        return res.status(500).json({ error: 'erro interno do servidor' });
     }
-})
+});
 
 //atualiza status
+router.patch('/:id', async (req: Request, res: Response) => {
+    const id = Number(req.params.id);
+    const { status } = req.body;
 
-router.patch("/produto/:id", async (req, res) => {
-    const id = Number(req.params.id)
-    const { status } = req.body
- 
     try {
-        const ProdutoAtualizado = await prisma.product.update({
+        const produtoAtualizado = await prisma.produto.update({
             where: { id },
             data: {
-               status
+                status
             }
-        })
- 
-        return res.json(ProdutoAtualizado)
+        });
+
+        return res.json(produtoAtualizado);
     } catch (error) {
-        return res.status(404).json({ error: "Produto não encontrado" })
+        return res.status(404).json({ error: 'Produto não encontrado' });
     }
- 
-})
+});
 
 //deleta um produto
-router.delete("/:id", async (req: Request, res: Response) => {
+router.delete('/:id', async (req: Request, res: Response) => {
     try {
-        await prisma.product.delete({
+        await prisma.produto.delete({
             where: { id: Number(req.params.id) }
-        })
-        return res.status(204).send()
+        });
+        return res.status(204).send();
     } catch (error) {
-        res.status(500).json({ error: "erro interno do servidor" })
+        return res.status(500).json({ error: 'erro interno do servidor' });
     }
-})
+});
 
-// teste
-
-export default router
+export default router;
