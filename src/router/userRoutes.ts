@@ -1,3 +1,4 @@
+
 import { Router, Request, Response } from 'express'
 import prisma from '../lib/prismaClient';
 
@@ -13,7 +14,7 @@ userRouter.post('/', async (req:Request, res:Response) => {
         });
     }
 
-    const usuarioExistente = await prisma.user.findFirst({
+    const usuarioExistente = await prisma.restauranteCadastro.findFirst({
       where: {
         OR: [{ email }, { cnpj }],
       },
@@ -25,16 +26,17 @@ userRouter.post('/', async (req:Request, res:Response) => {
       });
     }
 
-      const usuario = await prisma.user.create({
+      const usuario = await prisma.restauranteCadastro.create({
       data: {
         nome,
+        endereco,
+        telefone,
         email,
-        cpf,
-        curso,
-        role: "USER",
-        senha: senhaHash,
+        cnpj,
       },
     });
+
+    return res.status(201).json(usuario);
 
   } catch (error) {
     console.error(error);

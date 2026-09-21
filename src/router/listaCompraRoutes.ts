@@ -1,7 +1,10 @@
 import {Router, Request, Response} from 'express';
-import prisma from '@prisma/client'
+import prisma from '../lib/prismaClient';
  
 const router = Router();
+
+type ItemExistente = {nome: string}
+type ProdutoEsgotado = {nome: string; quantidade: number; unidade: string}
  
 //lista os itens JA AGRUPADOS por categoria, do jeito que a tela mostra
 //"Hortifruti (2)", "Proteinas (1)"...
@@ -89,11 +92,11 @@ router.post("/gerar", async (req: Request, res: Response) => {
             where: {restauranteId},
             select: {nome: true}
         })
-        const nomesNaLista = itensExistentes.map(i => i.nome)
+        const nomesNaLista = itensExistentes.map((i: ItemExistente) => i.nome)
  
         //filtra so os produtos que ainda nao estao na lista
         const produtosNovos = produtosEsgotados.filter(
-            produto => !nomesNaLista.includes(produto.nome)
+            (produto: ProdutoEsgotado) => !nomesNaLista.includes(produto.nome)
         )
  
         if (produtosNovos.length === 0) {
@@ -104,7 +107,7 @@ router.post("/gerar", async (req: Request, res: Response) => {
         //o Produto nao tem campo "categoria" (so localArmazenamento), entao o
         //item entra sem categoria e cai no grupo "Outros" na tela
         const itensCriados = await Promise.all(
-            produtosNovos.map(produto =>
+            produtosNovos.map((produto: ProdutoEsgotado) =>
                 prisma.itemListaCompras.create({
                     data: {
                         nome: produto.nome,

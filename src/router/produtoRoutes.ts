@@ -6,7 +6,7 @@ const router = Router();
 //lista todos os produtos
 router.get("/", async (req: Request, res: Response) => {
     try {
-        const produtos = await prisma.product.findMany()
+        const produtos = await prisma.produto.findMany()
         res.json(produtos)
     } catch (error) {
         res.status(500).json({ error: "erro interno do servidor" })
@@ -16,7 +16,7 @@ router.get("/", async (req: Request, res: Response) => {
 //busca produto por id
 router.get("/:id", async (req: Request, res: Response) => {
     try {
-        const produto = await prisma.product.findUnique({
+        const produto = await prisma.produto.findUnique({
             where: { id: Number(req.params.id) }
         })
 
@@ -34,7 +34,7 @@ router.post("/", async (req: Request, res: Response) => {
     try {
         const { nome, categoria, localArmazenamento, codigoBarras,  quantidade, unidade, dataValidade, restauranteId } = req.body
 
-        const produto = await prisma.product.create({
+        const produto = await prisma.produto.create({
             data: {
                 nome,
                 categoria,
@@ -59,12 +59,11 @@ router.put("/:id", async (req: Request, res: Response) => {
     try {
        const { nome, categoria, localArmazenamento, codigoBarras,  quantidade, unidade, dataValidade, restauranteId } = req.body
 
-        const produto = await prisma.product.update({
+        const produto = await prisma.produto.update({
             where: { id: Number(req.params.id) },
             data: {
                 nome,
                 codigoBarras,
-                categoria,
                 localArmazenamento,
                 quantidade,
                 unidade,
@@ -87,7 +86,7 @@ router.patch("/produto/:id", async (req, res) => {
     const { status } = req.body
  
     try {
-        const ProdutoAtualizado = await prisma.product.update({
+        const ProdutoAtualizado = await prisma.produto.update({
             where: { id },
             data: {
                status
@@ -104,7 +103,7 @@ router.patch("/produto/:id", async (req, res) => {
 //deleta um produto
 router.delete("/:id", async (req: Request, res: Response) => {
     try {
-        await prisma.product.delete({
+        await prisma.produto.delete({
             where: { id: Number(req.params.id) }
         })
         return res.status(204).send()
