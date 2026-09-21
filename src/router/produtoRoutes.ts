@@ -113,4 +113,6 @@ router.delete("/:id", async (req: Request, res: Response) => {
     }
 })
 
+// teste
+
 export default router
