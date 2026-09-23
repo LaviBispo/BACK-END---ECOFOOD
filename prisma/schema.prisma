@@ -1,101 +1,91 @@
-// ============================================================
-// Ecofood - schema.prisma
-// Banco: SQLite (arquivo local, sem precisar instalar servidor)
-//
-// Obs: o SQLite não suporta "enum" no Prisma, por isso os campos
-// que antes eram enum (categoria, local, status) agora são String.
-// A validação desses valores é feita no código (nos controllers).
-// ============================================================
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Get a free hosted Postgres database in seconds: `npx create-db`
 
 generator client {
   provider = "prisma-client-js"
+  output   = "../generated/prisma"
 }
 
 datasource db {
   provider = "sqlite"
-  url      = env("DATABASE_URL")
 }
 
-model Restaurant {
-  id          Int      @id @default(autoincrement())
-  name        String
-  cuisineType String
-  address     String
-  phone       String
-  email       String?
-  cnpj        String   @unique
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+model RestauranteCadastro {
+  id                Int                @id @default(autoincrement())
+  name              String             @map("nome")
+  password          String             @map("senha")
+  endereco          String
+  telefone          String
+  email             String             @unique
+  cnpj              String             @unique
+  atualizadoEm      DateTime           @updatedAt
+  usuarios          UsuarioPerfil[]
+  produtos          Produto[]
+  itensListaCompras ItemListaCompras[]
+  registrosImpacto  RegistroImpacto[]
 
-  users        User[]
-  products     Product[]
-  shoppingList ShoppingListItem[]
-  impactLogs   ImpactLog[]
-
-  @@map("restaurants")
+  @@map("restaurantes")
 }
 
-model User {
-  id           Int        @id @default(autoincrement())
-  name         String
-  email        String     @unique
-  passwordHash String
-  role         String     @default("OWNER")
-  restaurantId Int
-  restaurant   Restaurant @relation(fields: [restaurantId], references: [id], onDelete: Cascade)
-  createdAt    DateTime   @default(now())
-  updatedAt    DateTime   @updatedAt
+model UsuarioPerfil {
+  id            Int                 @id @default(autoincrement())
+  name          String              @map("nome")
+  fotoUrl       String?
+  email         String              @unique
+  password      String              @map("senha")
+  restauranteId Int
+  restaurante   RestauranteCadastro @relation(fields: [restauranteId], references: [id])
+  atualizadoEm  DateTime            @updatedAt
 
-  @@map("users")
+  @@map("usuarios")
 }
 
-model Product {
-  id              Int        @id @default(autoincrement())
-  name            String
-  barcode         String?
-  category        String
-  storageLocation String
-  quantity        Float      @default(1)
-  unit            String     @default("un")
-  unitPrice       Float?
-  supplier        String?
-  expirationDate  DateTime
-  status          String     @default("ATIVO")
-  restaurantId    Int
-  restaurant      Restaurant @relation(fields: [restaurantId], references: [id], onDelete: Cascade)
-  createdAt       DateTime   @default(now())
-  updatedAt       DateTime   @updatedAt
+model Produto {
+  id                 Int                 @id @default(autoincrement())
+  nome               String
+  codigoBarras       String?
+  localArmazenamento String
+  categoria          String
+  quantidade         Float               @default(1)
+  unidade            String              @default("un")
+  dataValidade       DateTime
+  status             String              @default("ATIVO")
+  restauranteId      Int
+  restaurante        RestauranteCadastro @relation(fields: [restauranteId], references: [id])
+  registrosImpacto   RegistroImpacto[]
+  deuEntradaEm       DateTime            @default(now())
+  atualizadoEm       DateTime            @updatedAt
 
-  impactLogs ImpactLog[]
-
-  @@map("products")
+  @@map("produtos")
 }
 
-model ImpactLog {
-  id             Int        @id @default(autoincrement())
-  productId      Int
-  product        Product    @relation(fields: [productId], references: [id], onDelete: Cascade)
-  restaurantId   Int
-  restaurant     Restaurant @relation(fields: [restaurantId], references: [id], onDelete: Cascade)
-  quantityKg     Float
-  estimatedValue Float
-  wasReduced     Boolean
-  createdAt      DateTime   @default(now())
+model RegistroImpacto {
+  id             Int                 @id @default(autoincrement())
+  produtoId      Int
+  produto        Produto             @relation(fields: [produtoId], references: [id])
+  restauranteId  Int
+  restaurante    RestauranteCadastro @relation(fields: [restauranteId], references: [id])
+  quantidadeKg   Float
+  foiAproveitado Boolean
+  criadoEm       DateTime            @default(now())
 
-  @@map("impact_logs")
+  @@map("registros_impacto")
 }
 
-model ShoppingListItem {
-  id           Int        @id @default(autoincrement())
-  name         String
-  category     String?
-  quantity     Float      @default(1)
-  unit         String     @default("un")
-  priority     Boolean    @default(false)
-  purchased    Boolean    @default(false)
-  restaurantId Int
-  restaurant   Restaurant @relation(fields: [restaurantId], references: [id], onDelete: Cascade)
-  createdAt    DateTime   @default(now())
+model ItemListaCompras {
+  id                 Int                 @id @default(autoincrement())
+  nome               String
+  localArmazenamento String
+  categoria          String
+  quantidade         Float               @default(1)
+  unidade            String              @default("un")
+  prioridade         Boolean             @default(false)
+  comprado           Boolean             @default(false)
+  restauranteId      Int
+  restaurante        RestauranteCadastro @relation(fields: [restauranteId], references: [id])
+  criadoEm           DateTime            @default(now())
 
-  @@map("shopping_list_items")
+  @@map("itens_lista_compras")
 }
