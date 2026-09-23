@@ -47,6 +47,7 @@ model Produto {
   nome               String
   codigoBarras       String?
   localArmazenamento String
+  categoria          String
   quantidade         Float               @default(1)
   unidade            String              @default("un")
   dataValidade       DateTime
@@ -77,6 +78,7 @@ model ItemListaCompras {
   id                 Int                 @id @default(autoincrement())
   nome               String
   localArmazenamento String
+  categoria          String
   quantidade         Float               @default(1)
   unidade            String              @default("un")
   prioridade         Boolean             @default(false)
