@@ -10,7 +10,8 @@ const router = (0, express_1.Router)();
 router.get("/:restauranteId", async (req, res) => {
     try {
         const restauranteId = Number(req.params.restauranteId);
-        const registros = await prismaClient_1.default.registroImpacto.findMany({
+        const prismaImpacto = prismaClient_1.default;
+        const registros = await prismaImpacto.registroImpacto.findMany({
             where: {
                 restauranteId: restauranteId
             }
@@ -72,7 +73,7 @@ router.get("/:restauranteId", async (req, res) => {
         });
     }
     catch (error) {
-        console.log(error);
+        console.log("ERROR:", error);
         res.status(500).json({ error: "erro interno do servidor" });
     }
 });

@@ -78,7 +78,7 @@ model ItemListaCompras {
   id                 Int                 @id @default(autoincrement())
   nome               String
   localArmazenamento String
-  categoria          String
+  categoria          String              @default("Outros")
   quantidade         Float               @default(1)
   unidade            String              @default("un")
   prioridade         Boolean             @default(false)
