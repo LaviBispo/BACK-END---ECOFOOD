@@ -35,7 +35,6 @@ router.post('/', async (req: Request, res: Response) => {
     try {
         const {
             nome,
-            categoria,
             localArmazenamento,
             codigoBarras,
             quantidade,
@@ -48,7 +47,6 @@ router.post('/', async (req: Request, res: Response) => {
         const produto = await prisma.produto.create({
             data: {
                 nome,
-                categoria,
                 codigoBarras,
                 localArmazenamento,
                 quantidade,
@@ -60,7 +58,7 @@ router.post('/', async (req: Request, res: Response) => {
         });
 
         return res.status(201).json(produto);
-    } catch (error) {
+    } catch (error) { console.error(error);
         return res.status(500).json({ error: 'erro interno do servidor' });
     }
 });
@@ -70,7 +68,6 @@ router.put('/:id', async (req: Request, res: Response) => {
     try {
         const {
             nome,
-            categoria,
             localArmazenamento,
             codigoBarras,
             quantidade,
