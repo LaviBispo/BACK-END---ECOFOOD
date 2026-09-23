@@ -10,7 +10,6 @@ generator client {
 
 datasource db {
   provider = "sqlite"
- 
 }
 
 model RestauranteCadastro {
@@ -75,16 +74,16 @@ model RegistroImpacto {
 }
 
 model ItemListaCompras {
-  id            Int                 @id @default(autoincrement())
-  nome          String
-  categoria     String?
-  quantidade    Float               @default(1)
-  unidade       String              @default("un")
-  prioridade    Boolean             @default(false)
-  comprado      Boolean             @default(false)
-  restauranteId Int
-  restaurante   RestauranteCadastro @relation(fields: [restauranteId], references: [id])
-  criadoEm      DateTime            @default(now())
+  id                 Int                 @id @default(autoincrement())
+  nome               String
+  localArmazenamento String
+  quantidade         Float               @default(1)
+  unidade            String              @default("un")
+  prioridade         Boolean             @default(false)
+  comprado           Boolean             @default(false)
+  restauranteId      Int
+  restaurante        RestauranteCadastro @relation(fields: [restauranteId], references: [id])
+  criadoEm           DateTime            @default(now())
 
   @@map("itens_lista_compras")
 }

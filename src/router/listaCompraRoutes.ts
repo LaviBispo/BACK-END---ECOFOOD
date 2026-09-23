@@ -60,7 +60,6 @@ router.post("/", async (req: Request, res: Response) => {
         const item = await prisma.itemListaCompras.create({
             data: {
                 nome,
-                categoria,
                 quantidade,
                 unidade,
                 prioridade,
@@ -134,7 +133,6 @@ router.put("/:id", async (req: Request, res: Response) => {
             where: {id: Number(req.params.id)},
             data: {
                 nome,
-                categoria,
                 quantidade,
                 unidade,
                 prioridade,
