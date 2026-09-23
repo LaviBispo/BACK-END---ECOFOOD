@@ -35,6 +35,7 @@ router.post('/', async (req: Request, res: Response) => {
     try {
         const {
             nome,
+            categoria,
             localArmazenamento,
             codigoBarras,
             quantidade,
@@ -44,9 +45,16 @@ router.post('/', async (req: Request, res: Response) => {
             status
         } = req.body;
 
+        if (!nome || !categoria || !localArmazenamento || !restauranteId) {
+            return res.status(400).json({
+                error: 'nome, categoria, localArmazenamento e restauranteId sao obrigatorios'
+            });
+        }
+
         const produto = await prisma.produto.create({
             data: {
                 nome,
+                categoria,
                 codigoBarras,
                 localArmazenamento,
                 quantidade,
@@ -68,6 +76,7 @@ router.put('/:id', async (req: Request, res: Response) => {
     try {
         const {
             nome,
+            categoria,
             localArmazenamento,
             codigoBarras,
             quantidade,
@@ -81,6 +90,7 @@ router.put('/:id', async (req: Request, res: Response) => {
             where: { id: Number(req.params.id) },
             data: {
                 nome,
+                categoria,
                 codigoBarras,
                 localArmazenamento,
                 quantidade,

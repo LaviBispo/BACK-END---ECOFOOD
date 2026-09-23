@@ -68,6 +68,7 @@ router.post("/", async (req: Request, res: Response) => {
     try {
         const {
             nome,
+            categoria,
             localArmazenamento,
             quantidade,
             unidade,
@@ -75,15 +76,16 @@ router.post("/", async (req: Request, res: Response) => {
             restauranteId
         } = req.body;
 
-        if (!nome || !localArmazenamento || !restauranteId) {
+        if (!nome || !categoria || !localArmazenamento || !restauranteId) {
             return res.status(400).json({
-                error: "Nome, local de armazenamento e restauranteId são obrigatórios"
+                error: "Nome, categoria, local de armazenamento e restauranteId são obrigatórios"
             });
         }
 
         const item = await prisma.itemListaCompras.create({
             data: {
                 nome,
+                categoria,
                 localArmazenamento,
                 quantidade,
                 unidade,
@@ -155,6 +157,7 @@ router.post("/gerar", async (req: Request, res: Response) => {
                     data: {
                         nome: produto.nome,
                         localArmazenamento: produto.localArmazenamento,
+                        categoria: produto.categoria,
                         quantidade: produto.quantidade > 0
                             ? produto.quantidade
                             : 1,
@@ -184,6 +187,7 @@ router.put("/:id", async (req: Request, res: Response) => {
 
         const {
             nome,
+            categoria,
             localArmazenamento,
             quantidade,
             unidade,
@@ -197,6 +201,7 @@ router.put("/:id", async (req: Request, res: Response) => {
             },
             data: {
                 nome,
+                categoria,
                 localArmazenamento,
                 quantidade,
                 unidade,
