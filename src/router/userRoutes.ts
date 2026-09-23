@@ -64,7 +64,6 @@ router.get("/", async (req: Request, res: Response) => {
         telefone: true,
         endereco: true,
       }
-
     });
 
     return res.status(200).json(usuarios);

@@ -1,17 +1,10 @@
 {
   "compilerOptions": {
     "target": "ES2020",
-<<<<<<< HEAD
     "module": "Node16",
     "lib": ["ES2020"],
     "types": ["node"],
     "moduleResolution": "Node16",
-=======
-    "module": "node16",
-    "lib": ["ES2020"],
-    "types": ["node"],
-    "moduleResolution": "node16",
->>>>>>> dba9b167c1cc18d5caf02d5a8ac0996644efea95
     "outDir": "./dist",
     "strict": true,
     "esModuleInterop": true,
