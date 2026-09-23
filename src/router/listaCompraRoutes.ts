@@ -1,160 +1,248 @@
-import {Router, Request, Response} from 'express';
-import prisma from '../lib/prismaClient';
- 
+
+import { Router, Request, Response } from "express";
+import prisma from "../lib/prismaClient";
+
 const router = Router();
 
-type ItemExistente = {nome: string}
-type ProdutoEsgotado = {nome: string; quantidade: number; unidade: string}
- 
-//lista os itens JA AGRUPADOS por categoria, do jeito que a tela mostra
-//"Hortifruti (2)", "Proteinas (1)"...
+// LISTAR TODOS OS ITENS AGRUPADOS POR LOCAL DE ARMAZENAMENTO
 router.get("/", async (req: Request, res: Response) => {
     try {
         const itens = await prisma.itemListaCompras.findMany({
-            orderBy: {categoria: "asc"}
-        })
- 
-        //agrupando os itens por categoria antes de responder
-        //categoria e opcional no schema, entao itens sem categoria caem em "Outros"
-        const grupos: any = {}
- 
-        for (const item of itens) {
-            const chave = item.categoria ?? "Outros"
- 
-            if (!grupos[chave]) {
-                grupos[chave] = []
+            orderBy: {
+                localArmazenamento: "asc"
             }
-            grupos[chave].push(item)
+        });
+
+        const grupos: any = {};
+
+        for (const item of itens) {
+            const local = item.localArmazenamento;
+
+            if (!grupos[local]) {
+                grupos[local] = [];
+            }
+
+            grupos[local].push(item);
         }
- 
+
         res.json({
             totalItens: itens.length,
             grupos
-        })
+        });
     } catch (error) {
-        res.status(500).json({error: "erro interno do servidor"})
+        res.status(500).json({
+            error: "Erro interno do servidor"
+        });
     }
-})
- 
-//busca um item por id
+});
+
+
+// BUSCAR UM ITEM PELO ID
 router.get("/:id", async (req: Request, res: Response) => {
     try {
+        const id = Number(req.params.id);
+
         const item = await prisma.itemListaCompras.findUnique({
-            where: {id: Number(req.params.id)}
-        })
- 
-        if(!item) {
-            return res.status(404).json({error: "item nao encontrado"})
+            where: {
+                id: id
+            }
+        });
+
+        if (!item) {
+            return res.status(404).json({
+                error: "Item não encontrado"
+            });
         }
-        res.json(item)
+
+        res.json(item);
     } catch (error) {
-        res.status(500).json({error: "erro interno do servidor"})
+        res.status(500).json({
+            error: "Erro interno do servidor"
+        });
     }
-})
- 
-//cria um item MANUALMENTE (botao "+" da tela)
+});
+
+
+// CRIAR UM ITEM MANUALMENTE
 router.post("/", async (req: Request, res: Response) => {
     try {
-        const {nome, categoria, quantidade, unidade, prioridade, restauranteId} = req.body
- 
+        const {
+            nome,
+            localArmazenamento,
+            quantidade,
+            unidade,
+            prioridade,
+            restauranteId
+        } = req.body;
+
+        if (!nome || !localArmazenamento || !restauranteId) {
+            return res.status(400).json({
+                error: "Nome, local de armazenamento e restauranteId são obrigatórios"
+            });
+        }
+
         const item = await prisma.itemListaCompras.create({
             data: {
                 nome,
+                localArmazenamento,
                 quantidade,
                 unidade,
                 prioridade,
                 restauranteId
             }
-        })
-        res.status(201).json(item)
+        });
+
+        res.status(201).json(item);
     } catch (error) {
-        res.status(500).json({error: "erro interno do servidor"})
+        res.status(500).json({
+            error: "Erro interno do servidor"
+        });
     }
-})
- 
-//gera itens AUTOMATICAMENTE a partir dos produtos que esgotaram
-//chame essa rota quando um produto mudar de status pra "ESGOTADO"
+});
+
+
+// GERAR ITENS AUTOMATICAMENTE DOS PRODUTOS ESGOTADOS
 router.post("/gerar", async (req: Request, res: Response) => {
     try {
-        const {restauranteId} = req.body
- 
-        //busca produtos esgotados desse restaurante
+        const { restauranteId } = req.body;
+
+        if (!restauranteId) {
+            return res.status(400).json({
+                error: "restauranteId é obrigatório"
+            });
+        }
+
+        // Busca os produtos esgotados do restaurante
         const produtosEsgotados = await prisma.produto.findMany({
             where: {
                 restauranteId,
                 status: "ESGOTADO"
             }
-        })
- 
-        //busca o que ja esta na lista, pra nao duplicar
-        const itensExistentes = await prisma.itemListaCompras.findMany({
-            where: {restauranteId},
-            select: {nome: true}
-        })
-        const nomesNaLista = itensExistentes.map((i: ItemExistente) => i.nome)
- 
-        //filtra so os produtos que ainda nao estao na lista
+        });
+
+        // Busca os itens que já estão na lista
+        const itensExistentes =
+            await prisma.itemListaCompras.findMany({
+                where: {
+                    restauranteId
+                },
+                select: {
+                    nome: true
+                }
+            });
+
+        // Cria uma lista com os nomes que já existem
+        const nomesNaLista = itensExistentes.map(
+            (item) => item.nome
+        );
+
+        // Filtra somente os produtos que ainda não estão na lista
         const produtosNovos = produtosEsgotados.filter(
-            (produto: ProdutoEsgotado) => !nomesNaLista.includes(produto.nome)
-        )
- 
+            (produto) => !nomesNaLista.includes(produto.nome)
+        );
+
         if (produtosNovos.length === 0) {
-            return res.json({criados: 0, mensagem: "nenhum item novo pra adicionar"})
+            return res.json({
+                criados: 0,
+                mensagem: "Nenhum item novo para adicionar"
+            });
         }
- 
-        //cria um item de lista de compras pra cada produto esgotado
-        //o Produto nao tem campo "categoria" (so localArmazenamento), entao o
-        //item entra sem categoria e cai no grupo "Outros" na tela
+
+        // Cria um item de compras para cada produto novo
         const itensCriados = await Promise.all(
-            produtosNovos.map((produto: ProdutoEsgotado) =>
+            produtosNovos.map((produto) =>
                 prisma.itemListaCompras.create({
                     data: {
                         nome: produto.nome,
-                        quantidade: produto.quantidade > 0 ? produto.quantidade : 1,
+                        localArmazenamento: produto.localArmazenamento,
+                        quantidade: produto.quantidade > 0
+                            ? produto.quantidade
+                            : 1,
                         unidade: produto.unidade,
                         restauranteId
                     }
                 })
             )
-        )
- 
-        res.status(201).json({criados: itensCriados.length, itens: itensCriados})
+        );
+
+        res.status(201).json({
+            criados: itensCriados.length,
+            itens: itensCriados
+        });
     } catch (error) {
-        res.status(500).json({error: "erro interno do servidor"})
+        res.status(500).json({
+            error: "Erro interno do servidor"
+        });
     }
-})
- 
-//atualiza um item (inclui marcar/desmarcar como comprado)
+});
+
+
+// ATUALIZAR UM ITEM
 router.put("/:id", async (req: Request, res: Response) => {
     try {
-        const {nome, categoria, quantidade, unidade, prioridade, comprado} = req.body
- 
+        const id = Number(req.params.id);
+
+        const {
+            nome,
+            localArmazenamento,
+            quantidade,
+            unidade,
+            prioridade,
+            comprado
+        } = req.body;
+
         const item = await prisma.itemListaCompras.update({
-            where: {id: Number(req.params.id)},
+            where: {
+                id: id
+            },
             data: {
                 nome,
+                localArmazenamento,
                 quantidade,
                 unidade,
                 prioridade,
                 comprado
             }
-        })
-        res.json(item)
+        });
+
+        res.json(item);
     } catch (error) {
-        res.status(500).json({error: "erro interno do servidor"})
+        res.status(500).json({
+            error: "Erro interno do servidor"
+        });
     }
-})
- 
-//deleta um item da lista
+});
+
+
+// DELETAR UM ITEM
 router.delete("/:id", async (req: Request, res: Response) => {
     try {
+        const id = Number(req.params.id);
+
+        const item = await prisma.itemListaCompras.findUnique({
+            where: {
+                id: id
+            }
+        });
+
+        if (!item) {
+            return res.status(404).json({
+                error: "Item não encontrado"
+            });
+        }
+
         await prisma.itemListaCompras.delete({
-            where: {id: Number(req.params.id)}
-        })
-        return res.status(204).send()
+            where: {
+                id: id
+            }
+        });
+
+        return res.status(204).send();
     } catch (error) {
-        res.status(500).json({error: "erro interno do servidor"})
+        res.status(500).json({
+            error: "Erro interno do servidor"
+        });
     }
-})
- 
-export default router
+});
+
+export default router;
