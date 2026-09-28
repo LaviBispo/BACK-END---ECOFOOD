@@ -5,6 +5,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = require("express");
 const prismaClient_1 = __importDefault(require("../lib/prismaClient"));
+const auth_1 = require("../middlewares/auth");
 const router = (0, express_1.Router)();
 router.post('/', async (req, res) => {
     try {
@@ -43,7 +44,7 @@ router.post('/', async (req, res) => {
         });
     }
 });
-router.get("/", async (req, res) => {
+router.get("/", auth_1.authenticate, async (req, res) => {
     try {
         const usuarios = await prismaClient_1.default.restauranteCadastro.findMany({
             select: {
