@@ -4,7 +4,9 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = require("express");
+const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
 const prismaClient_1 = __importDefault(require("../lib/prismaClient"));
+const auth_1 = require("../middlewares/auth");
 const router = (0, express_1.Router)();
 router.post('/', async (req, res) => {
     try {
@@ -29,7 +31,24 @@ router.post('/', async (req, res) => {
                 error: 'Senha incorreta',
             });
         }
-        return res.status(200).json(usuario);
+        const jwtSecret = process.env.JWT_SECRET;
+        if (!jwtSecret) {
+            return res.status(500).json({ error: 'JWT_SECRET não configurado' });
+        }
+        const token = jsonwebtoken_1.default.sign({
+            userId: usuario.id,
+            restaurantId: usuario.id,
+            name: usuario.name,
+            email: usuario.email,
+        }, jwtSecret, { expiresIn: '8h' });
+        return res.status(200).json({
+            token,
+            usuario: {
+                id: usuario.id,
+                name: usuario.name,
+                email: usuario.email,
+            },
+        });
     }
     catch (error) {
         console.error(error);
@@ -38,7 +57,7 @@ router.post('/', async (req, res) => {
         });
     }
 });
-router.get("/", async (req, res) => {
+router.get("/", auth_1.authenticate, async (req, res) => {
     try {
         const usuarios = await prismaClient_1.default.restauranteCadastro.findMany({
             select: {
