@@ -15,7 +15,7 @@ app.use(express_1.default.json());
 app.use("/api/user", userRoutes_1.default);
 app.use("/api/login", loginRoutes_1.default);
 app.use("/api/produto", produtoRoutes_1.default);
-app.use("/api/telaInicio", telaInicioRoutes_1.default);
+app.use("/inicio", telaInicioRoutes_1.default);
 app.use("/api/impacto", impactoRoutes_1.default);
 app.use("/api/listaCompra", listaCompraRoutes_1.default);
 app.listen(3000, () => {
