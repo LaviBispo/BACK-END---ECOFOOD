@@ -4,8 +4,6 @@ import prisma from '../lib/prismaClient';
 
 const router = Router();
 
-
-
 router.get('/:restauranteId/quantidade', async (req: Request, res: Response) => {
     try {
         const restauranteId = Number(req.params.restauranteId);
