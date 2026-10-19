@@ -2,6 +2,7 @@ import { Router, Request, Response } from 'express';
 import jwt from 'jsonwebtoken';
 import prisma from '../lib/prismaClient';
 import { authenticate } from '../middlewares/auth';
+import bcrypt from 'bcrypt';
 
 const router = Router();
 
@@ -9,7 +10,7 @@ router.post('/', async (req: Request, res: Response) => {
   try {
     const { email, senha } = req.body;
 
-     if (!email || !senha) {
+    if (!email || !senha) {
       return res.status(400).json({
         error: "Preencha email e senha",
       });
@@ -27,9 +28,11 @@ router.post('/', async (req: Request, res: Response) => {
       });
     }
 
-    if (usuario.password !== senha) {
+    const senhaCorreta = await bcrypt.compare(senha, usuario.password);
+
+    if (!senhaCorreta) {
       return res.status(401).json({
-        error: 'Senha incorreta',
+        error: 'Email ou senha incorretos',
       });
     }
 
@@ -78,9 +81,9 @@ router.get("/", authenticate, async (req: Request, res: Response) => {
         telefone: true,
         endereco: true,
 
-        
+
       }
-     
+
     });
 
     return res.status(200).json(usuarios);
@@ -108,7 +111,7 @@ router.get("/me", authenticate, async (req: Request, res: Response) => {
         id: userId,
       },
       select: {
-        id: true, 
+        id: true,
         name: true,
         email: true,
         cnpj: true,

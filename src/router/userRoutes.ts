@@ -1,6 +1,7 @@
 import { Router, Request, Response } from 'express';
 import prisma from '../lib/prismaClient';
 import { authenticate } from '../middlewares/auth';
+import bcrypt from 'bcrypt';
 
 const router = Router();
 
@@ -33,10 +34,12 @@ router.post('/', async (req: Request, res: Response) => {
       });
     }
 
+    const senhaHash = await bcrypt.hash(senha, 10);
+
     const usuario = await prisma.restauranteCadastro.create({
       data: {
         name: nome,
-        password: senha,
+        password: senhaHash,
         endereco,
         telefone,
         email,
@@ -44,18 +47,27 @@ router.post('/', async (req: Request, res: Response) => {
       },
     });
 
-    return res.status(201).json(usuario);
+    return res.status(201).json({
+      mensagem: 'Restaurante cadastrado com sucesso',
+      usuario: {
+        id: usuario.id,
+        name: usuario.name,
+        email: usuario.email,
+        cnpj: usuario.cnpj,
+        telefone: usuario.telefone,
+        endereco: usuario.endereco,
+      },
+    });
   } catch (error) {
     console.error(error);
     return res.status(500).json({
-      error: 'Erro ao registrar restaurante',
+      error: 'Erro ao cadastrar restaurante',
     });
   }
 });
 
-router.get("/", authenticate, async (req: Request, res: Response) => {
+router.get('/', authenticate, async (req: Request, res: Response) => {
   try {
-
     const usuarios = await prisma.restauranteCadastro.findMany({
       select: {
         id: true,
@@ -64,16 +76,15 @@ router.get("/", authenticate, async (req: Request, res: Response) => {
         cnpj: true,
         telefone: true,
         endereco: true,
-      }
+      },
     });
 
     return res.status(200).json(usuarios);
-
   } catch (error) {
     console.error(error);
 
     return res.status(500).json({
-      error: "Erro ao buscar usuarios",
+      error: 'Erro ao buscar usuarios',
     });
   }
 });
