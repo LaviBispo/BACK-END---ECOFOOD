@@ -1,0 +1,91 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Get a free hosted Postgres database in seconds: `npx create-db`
+
+generator client {
+  provider = "prisma-client-js"
+  output   = "../generated/prisma"
+}
+
+datasource db {
+  provider = "sqlite"
+}
+
+model RestauranteCadastro {
+  id                Int                @id @default(autoincrement())
+  name              String             @map("nome")
+  password          String             @map("senha")
+  endereco          String
+  telefone          String
+  email             String             @unique
+  cnpj              String             @unique
+  atualizadoEm      DateTime           @updatedAt
+  usuarios          UsuarioPerfil[]
+  produtos          Produto[]
+  itensListaCompras ItemListaCompras[]
+  registrosImpacto  RegistroImpacto[]
+
+  @@map("restaurantes")
+}
+
+model UsuarioPerfil {
+  id            Int                 @id @default(autoincrement())
+  name          String              @map("nome")
+  fotoUrl       String?
+  email         String              @unique
+  password      String              @map("senha")
+  restauranteId Int
+  restaurante   RestauranteCadastro @relation(fields: [restauranteId], references: [id])
+  atualizadoEm  DateTime            @updatedAt
+
+  @@map("usuarios")
+}
+
+model Produto {
+  id                 Int                 @id @default(autoincrement())
+  nome               String
+  codigoBarras       String?
+  localArmazenamento String
+  categoria          String
+  quantidade         Float               @default(1)
+  unidade            String              @default("un")
+  dataValidade       DateTime
+  status             String              @default("ATIVO")
+  restauranteId      Int
+  restaurante        RestauranteCadastro @relation(fields: [restauranteId], references: [id])
+  registrosImpacto   RegistroImpacto[]
+  deuEntradaEm       DateTime            @default(now())
+  atualizadoEm       DateTime            @updatedAt
+
+  @@map("produtos")
+}
+
+model RegistroImpacto {
+  id             Int                 @id @default(autoincrement())
+  produtoId      Int
+  produto        Produto             @relation(fields: [produtoId], references: [id])
+  restauranteId  Int
+  restaurante    RestauranteCadastro @relation(fields: [restauranteId], references: [id])
+  quantidadeKg   Float
+  foiAproveitado Boolean
+  criadoEm       DateTime            @default(now())
+
+  @@map("registros_impacto")
+}
+
+model ItemListaCompras {
+  id                 Int                 @id @default(autoincrement())
+  nome               String
+  localArmazenamento String
+  categoria          String              @default("Outros")
+  quantidade         Float               @default(1)
+  unidade            String              @default("un")
+  prioridade         Boolean             @default(false)
+  comprado           Boolean             @default(false)
+  restauranteId      Int
+  restaurante        RestauranteCadastro @relation(fields: [restauranteId], references: [id])
+  criadoEm           DateTime            @default(now())
+
+  @@map("itens_lista_compras")
+}
