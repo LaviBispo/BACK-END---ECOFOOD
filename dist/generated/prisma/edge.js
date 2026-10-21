@@ -39,12 +39,12 @@ exports.Prisma = Prisma
 exports.$Enums = {}
 
 /**
- * Prisma Client JS version: 7.10.0
- * Query Engine version: 0edf323efd1d98336f3f0a68684b56f689b900d3
+ * Prisma Client JS version: 7.10.1
+ * Query Engine version: d1b3f377ca835d73fd50954a5e22128b9ebdd6b8
  */
 Prisma.prismaVersion = {
-  client: "7.10.0",
-  engine: "0edf323efd1d98336f3f0a68684b56f689b900d3"
+  client: "7.10.1",
+  engine: "d1b3f377ca835d73fd50954a5e22128b9ebdd6b8"
 }
 
 Prisma.PrismaClientKnownRequestError = PrismaClientKnownRequestError;
@@ -170,8 +170,8 @@ exports.Prisma.ModelName = {
  */
 const config = {
   "previewFeatures": [],
-  "clientVersion": "7.10.0",
-  "engineVersion": "0edf323efd1d98336f3f0a68684b56f689b900d3",
+  "clientVersion": "7.10.1",
+  "engineVersion": "d1b3f377ca835d73fd50954a5e22128b9ebdd6b8",
   "activeProvider": "sqlite",
   "inlineSchema": "// This is your Prisma schema file,\n// learn more about it in the docs: https://pris.ly/d/prisma-schema\n\n// Get a free hosted Postgres database in seconds: `npx create-db`\n\ngenerator client {\n  provider = \"prisma-client-js\"\n  output   = \"../generated/prisma\"\n}\n\ndatasource db {\n  provider = \"sqlite\"\n}\n\nmodel RestauranteCadastro {\n  id                Int                @id @default(autoincrement())\n  name              String             @map(\"nome\")\n  password          String             @map(\"senha\")\n  endereco          String\n  telefone          String\n  email             String             @unique\n  cnpj              String             @unique\n  atualizadoEm      DateTime           @updatedAt\n  usuarios          UsuarioPerfil[]\n  produtos          Produto[]\n  itensListaCompras ItemListaCompras[]\n  registrosImpacto  RegistroImpacto[]\n\n  @@map(\"restaurantes\")\n}\n\nmodel UsuarioPerfil {\n  id            Int                 @id @default(autoincrement())\n  name          String              @map(\"nome\")\n  fotoUrl       String?\n  email         String              @unique\n  password      String              @map(\"senha\")\n  restauranteId Int\n  restaurante   RestauranteCadastro @relation(fields: [restauranteId], references: [id])\n  atualizadoEm  DateTime            @updatedAt\n\n  @@map(\"usuarios\")\n}\n\nmodel Produto {\n  id                 Int                 @id @default(autoincrement())\n  nome               String\n  codigoBarras       String?\n  localArmazenamento String\n  categoria          String\n  quantidade         Float               @default(1)\n  unidade            String              @default(\"un\")\n  dataValidade       DateTime\n  status             String              @default(\"ATIVO\")\n  restauranteId      Int\n  restaurante        RestauranteCadastro @relation(fields: [restauranteId], references: [id])\n  registrosImpacto   RegistroImpacto[]\n  deuEntradaEm       DateTime            @default(now())\n  atualizadoEm       DateTime            @updatedAt\n\n  @@map(\"produtos\")\n}\n\nmodel RegistroImpacto {\n  id             Int                 @id @default(autoincrement())\n  produtoId      Int\n  produto        Produto             @relation(fields: [produtoId], references: [id])\n  restauranteId  Int\n  restaurante    RestauranteCadastro @relation(fields: [restauranteId], references: [id])\n  quantidadeKg   Float\n  foiAproveitado Boolean\n  criadoEm       DateTime            @default(now())\n\n  @@map(\"registros_impacto\")\n}\n\nmodel ItemListaCompras {\n  id                 Int                 @id @default(autoincrement())\n  nome               String\n  localArmazenamento String\n  categoria          String              @default(\"Outros\")\n  quantidade         Float               @default(1)\n  unidade            String              @default(\"un\")\n  prioridade         Boolean             @default(false)\n  comprado           Boolean             @default(false)\n  restauranteId      Int\n  restaurante        RestauranteCadastro @relation(fields: [restauranteId], references: [id])\n  criadoEm           DateTime            @default(now())\n\n  @@map(\"itens_lista_compras\")\n}\n"
 }

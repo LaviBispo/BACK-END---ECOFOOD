@@ -117,9 +117,9 @@ router.post("/gerar", async (req: Request, res: Response) => {
             where: { restauranteId },
             select: { nome: true }
         });
-        const nomesNaLista = itensExistentes.map((item) => item.nome);
+        const nomesNaLista = itensExistentes.map((item: { nome: string }) => item.nome);
         const produtosNovos = produtosEsgotados.filter(
-            (produto) => !nomesNaLista.includes(produto.nome)
+            (produto: (typeof produtosEsgotados)[number]) => !nomesNaLista.includes(produto.nome)
         );
 
         if (produtosNovos.length === 0) {
@@ -130,7 +130,7 @@ router.post("/gerar", async (req: Request, res: Response) => {
         }
 
         const itensCriados = await Promise.all(
-            produtosNovos.map((produto) =>
+            produtosNovos.map((produto: (typeof produtosNovos)[number]) =>
                 prisma.itemListaCompras.create({
                     data: {
                         nome: produto.nome,

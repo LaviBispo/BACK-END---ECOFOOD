@@ -4,6 +4,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.authenticate = authenticate;
+require("dotenv/config");
 const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
 function authenticate(req, res, next) {
     const authorization = req.headers.authorization;

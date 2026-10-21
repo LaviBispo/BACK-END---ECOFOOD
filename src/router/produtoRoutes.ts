@@ -47,7 +47,7 @@ router.get('/', async (req: Request, res: Response) => {
         });
 
         // 5. adiciona "diasRestantes" em cada produto
-        const lista = produtos.map((produto) => ({
+        const lista = produtos.map((produto: { dataValidade: Date }) => ({
             ...produto,
             diasRestantes: calcularDiasRestantes(produto.dataValidade)
         }));
