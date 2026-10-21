@@ -1,4 +1,5 @@
 import { NextFunction, Request, Response } from "express";
+import "dotenv/config";
 import jwt, { JwtPayload } from "jsonwebtoken";
 
 interface AuthTokenPayload extends JwtPayload {
