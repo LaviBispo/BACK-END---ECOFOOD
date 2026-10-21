@@ -78,7 +78,7 @@ router.get('/:restauranteId', async (req: Request, res: Response) => {
             }
         });
 
-        const notificacoes = produtos.map((produto) => {
+        const notificacoes = produtos.map((produto: (typeof produtos)[number]) => {
             const validade = new Date(produto.dataValidade);
             validade.setHours(0, 0, 0, 0);
 

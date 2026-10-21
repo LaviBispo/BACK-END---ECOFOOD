@@ -6,13 +6,63 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = require("express");
 const prismaClient_1 = __importDefault(require("../lib/prismaClient"));
 const router = (0, express_1.Router)();
-//lista todos os produtos
-router.get('/', async (_req, res) => {
+// calcula quantos dias faltam para uma data
+function calcularDiasRestantes(dataValidade) {
+    const hoje = new Date();
+    hoje.setHours(0, 0, 0, 0); // zera a hora, para contar só os dias
+    const validade = new Date(dataValidade);
+    validade.setHours(0, 0, 0, 0);
+    const umDiaEmMs = 1000 * 60 * 60 * 24;
+    return Math.round((validade.getTime() - hoje.getTime()) / umDiaEmMs);
+}
+// lista o estoque (tela de Estoque)
+// exemplo: /produtos?restauranteId=1&local=geladeira&busca=tomate
+router.get('/', async (req, res) => {
     try {
-        const produtos = await prismaClient_1.default.produto.findMany();
-        res.json(produtos);
+        // 1. pega o que o app mandou na URL
+        const { local, busca, restauranteId } = req.query;
+        // 2. filtro base: só produtos ATIVOS (esgotados vão pra lista de compras)
+        const filtroBase = { status: 'ATIVO' };
+        if (local) {
+            filtroBase.localArmazenamento = String(local).toUpperCase();
+        }
+        if (restauranteId) {
+            filtroBase.restauranteId = Number(restauranteId);
+        }
+        // 3. filtro da lista: o base + a busca pelo nome
+        const filtroLista = { ...filtroBase };
+        if (busca) {
+            filtroLista.nome = { contains: String(busca) };
+        }
+        // 4. busca os produtos, do que vence primeiro para o que vence depois
+        const produtos = await prismaClient_1.default.produto.findMany({
+            where: filtroLista,
+            orderBy: { dataValidade: 'asc' }
+        });
+        // 5. adiciona "diasRestantes" em cada produto
+        const lista = produtos.map((produto) => ({
+            ...produto,
+            diasRestantes: calcularDiasRestantes(produto.dataValidade)
+        }));
+        // 6. conta quantos vencem em até 7 dias (o alerta vermelho)
+        //    usa o filtroBase, então a busca não muda esse número
+        const limite = new Date();
+        limite.setHours(0, 0, 0, 0);
+        limite.setDate(limite.getDate() + 7);
+        const totalProximosVencimento = await prismaClient_1.default.produto.count({
+            where: {
+                ...filtroBase,
+                dataValidade: { lte: limite }
+            }
+        });
+        // 7. devolve tudo pro app
+        res.json({
+            totalProximosVencimento,
+            produtos: lista
+        });
     }
     catch (error) {
+        console.error(error);
         res.status(500).json({ error: 'erro interno do servidor' });
     }
 });
@@ -45,7 +95,7 @@ router.post('/', async (req, res) => {
                 nome,
                 categoria,
                 codigoBarras,
-                localArmazenamento,
+                localArmazenamento: String(localArmazenamento).toUpperCase(),
                 quantidade,
                 unidade,
                 dataValidade: dataValidade ? new Date(dataValidade) : new Date(),
@@ -70,7 +120,9 @@ router.put('/:id', async (req, res) => {
                 nome,
                 categoria,
                 codigoBarras,
-                localArmazenamento,
+                localArmazenamento: localArmazenamento
+                    ? String(localArmazenamento).toUpperCase()
+                    : undefined,
                 quantidade,
                 unidade,
                 dataValidade: dataValidade ? new Date(dataValidade) : undefined,

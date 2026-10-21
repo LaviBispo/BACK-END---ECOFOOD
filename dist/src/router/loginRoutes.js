@@ -7,6 +7,7 @@ const express_1 = require("express");
 const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
 const prismaClient_1 = __importDefault(require("../lib/prismaClient"));
 const auth_1 = require("../middlewares/auth");
+const bcrypt_1 = __importDefault(require("bcrypt"));
 const router = (0, express_1.Router)();
 router.post('/', async (req, res) => {
     try {
@@ -26,9 +27,10 @@ router.post('/', async (req, res) => {
                 error: 'Restaurante não encontrado',
             });
         }
-        if (usuario.password !== senha) {
+        const senhaCorreta = await bcrypt_1.default.compare(senha, usuario.password);
+        if (!senhaCorreta) {
             return res.status(401).json({
-                error: 'Senha incorreta',
+                error: 'Email ou senha incorretos',
             });
         }
         const jwtSecret = process.env.JWT_SECRET;
