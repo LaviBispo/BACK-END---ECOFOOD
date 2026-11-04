@@ -18,7 +18,7 @@ router.get("/:restauranteId", async (req: Request, res: Response) => {
         //calcula a quantidade de alimentos salvos
         let alimentosSalvos = 0
 
-        //conta as escolhas conscientes teste
+        //conta as escolhas conscientes 
         let escolhasConscientes = 0
 
         //calcula o total de alimentos registrados

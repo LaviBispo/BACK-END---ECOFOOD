@@ -74,7 +74,12 @@ router.patch('/:id/status', async (req: Request, res: Response) => {
 
         const produto = await prisma.produto.findUnique({
             where: { id },
-            select: { id: true }
+            select: {
+                id: true,
+                restauranteId: true,
+                quantidade: true,
+                unidade: true
+            }
         });
 
         if (!produto) {
@@ -83,25 +88,43 @@ router.patch('/:id/status', async (req: Request, res: Response) => {
             });
         }
 
-        const produtoAtualizado = await prisma.produto.update({
-            where: { id },
-            data: { status },
-            select: {
-                id: true,
-                nome: true,
-                status: true
-            }
+
+        const resultado = await prisma.$transaction(async (tx) => {
+            const produtoAtualizado = await tx.produto.update({
+                where: { id },
+                data: { status },
+                select: {
+                    id: true,
+                    nome: true,
+                    status: true
+                }
+            });
+
+            const impacto = await tx.registroImpacto.create({
+                data: {
+                    produtoId: produto.id,
+                    restauranteId: produto.restauranteId,
+                    quantidadeKg:
+                        produto.unidade.toLowerCase() === 'kg'
+                            ? produto.quantidade
+                            : 0,
+                    foiAproveitado: status === 'APROVEITADO'
+                }
+            });
+
+            return { produto: produtoAtualizado, impacto };
         });
 
         return res.status(200).json({
-            mensagem: 'Status atualizado com sucesso',
-            produto: produtoAtualizado
+            mensagem: 'Status atualizado e impacto registrado com sucesso',
+            produto: resultado.produto
         });
+
     } catch (error) {
         console.error(error);
 
         return res.status(500).json({
-            error: 'Erro ao atualizar status'
+            error: 'Erro ao atualizar status ou registrar impacto'
         });
     }
 });
