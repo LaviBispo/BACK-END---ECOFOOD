@@ -12,6 +12,7 @@ import perfilRouter from "./router/perfilRoutes"
 import notificacoesRouter from "./router/notificacoesRoutes"
 import { authenticate } from "./middlewares/auth"
 import { validarSenha } from './router/validar-senhaRoutes'
+import senhaRoutes from './router/senhaRoutes';
 import "dotenv/config";
 import cors from "cors"
 
@@ -30,6 +31,7 @@ app.use("/api/status-produtos", authenticate, statusProdutosRouter)
 app.use("/api/perfil", authenticate, perfilRouter)
 app.use("/api/notificacoes", authenticate, notificacoesRouter)
 app.use("/api/validar-senha", validarSenha)
+app.use
 
 app.listen(3000, () => {
     console.log("Servidor rodando na porta 3000")
