@@ -1,6 +1,7 @@
 import { Router, Request, Response } from 'express';
 import prisma from '../lib/prismaClient';
 import { authenticate } from '../middlewares/auth';
+import { validarSenha } from './validar-senhaRoutes';
 import bcrypt from 'bcrypt';
 
 const router = Router();
@@ -21,6 +22,22 @@ router.post('/', async (req: Request, res: Response) => {
         error: 'Preencha todos os campos',
       });
     }
+
+    if (typeof senha !== 'string') {
+      return res.status(400).json({
+        error: 'A senha deve ser um texto válido.',
+      });
+    }
+
+    const resultado = validarSenha(senha);
+
+    if (!resultado.valida) {
+      return res.status(400).json({
+        error: 'A senha não atende às regras de segurança.',
+        erros: resultado.erros,
+      });
+    }
+
 
     const usuarioExistente = await prisma.restauranteCadastro.findFirst({
       where: {
