@@ -13,18 +13,20 @@ datasource db {
 }
 
 model RestauranteCadastro {
-  id                Int                @id @default(autoincrement())
-  name              String             @map("nome")
-  password          String             @map("senha")
-  endereco          String
-  telefone          String
-  email             String             @unique
-  cnpj              String             @unique
-  atualizadoEm      DateTime           @updatedAt
-  usuarios          UsuarioPerfil[]
-  produtos          Produto[]
-  itensListaCompras ItemListaCompras[]
-  registrosImpacto  RegistroImpacto[]
+  id                   Int                @id @default(autoincrement())
+  name                 String             @map("nome")
+  password             String             @map("senha")
+  endereco             String
+  telefone             String
+  email                String             @unique
+  cnpj                 String             @unique
+  resetPasswordToken   String?            @map("reset_token")
+  resetPasswordExpires DateTime?          @map("reset_expira_em")
+  atualizadoEm         DateTime           @updatedAt
+  usuarios             UsuarioPerfil[]
+  produtos             Produto[]
+  itensListaCompras    ItemListaCompras[]
+  registrosImpacto     RegistroImpacto[]
 
   @@map("restaurantes")
 }
