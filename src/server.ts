@@ -31,7 +31,7 @@ app.use("/api/status-produtos", authenticate, statusProdutosRouter)
 app.use("/api/perfil", authenticate, perfilRouter)
 app.use("/api/notificacoes", authenticate, notificacoesRouter)
 app.use("/api/validar-senha", validarSenha)
-app.use
+app.use("/api/senha", senhaRoutes)
 
 app.listen(3000, () => {
     console.log("Servidor rodando na porta 3000")
