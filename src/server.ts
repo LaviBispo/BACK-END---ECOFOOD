@@ -36,6 +36,7 @@ app.use("/api/validar-senha", validarSenha)
 app.use("/api/redefinir-senha", senhaRoutes)
 app.use("/", paginaRedefinirRoutes)
 app.use("/api/pagina-redefinir-senha", paginaRedefinirRoutes)
+app.use("/api/senha", senhaRoutes)
 
 app.listen(3000, () => {
     console.log("Servidor rodando na porta 3000")

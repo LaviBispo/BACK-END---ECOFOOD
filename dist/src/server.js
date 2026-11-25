@@ -17,7 +17,10 @@ const notificacoesRoutes_1 = __importDefault(require("./router/notificacoesRoute
 const auth_1 = require("./middlewares/auth");
 const validar_senhaRoutes_1 = require("./router/validar-senhaRoutes");
 const senhaRoutes_1 = __importDefault(require("./router/senhaRoutes"));
+<<<<<<< HEAD
 const paginaRedefinirRoutes_1 = __importDefault(require("./router/paginaRedefinirRoutes"));
+=======
+>>>>>>> 44787d62e3f93716e629714720278a492d1e4d43
 require("dotenv/config");
 const cors_1 = __importDefault(require("cors"));
 const app = (0, express_1.default)();
@@ -34,9 +37,13 @@ app.use("/api/status-produtos", auth_1.authenticate, status_produtosRoutes_1.def
 app.use("/api/perfil", auth_1.authenticate, perfilRoutes_1.default);
 app.use("/api/notificacoes", auth_1.authenticate, notificacoesRoutes_1.default);
 app.use("/api/validar-senha", validar_senhaRoutes_1.validarSenha);
+<<<<<<< HEAD
 app.use("/api/redefinir-senha", senhaRoutes_1.default);
 app.use("/", paginaRedefinirRoutes_1.default);
 app.use("/api/pagina-redefinir-senha", paginaRedefinirRoutes_1.default);
+=======
+app.use("/api/senha", senhaRoutes_1.default);
+>>>>>>> 44787d62e3f93716e629714720278a492d1e4d43
 app.listen(3000, () => {
     console.log("Servidor rodando na porta 3000");
 });

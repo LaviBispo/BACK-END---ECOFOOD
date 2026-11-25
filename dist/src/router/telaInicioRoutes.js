@@ -6,48 +6,51 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = require("express");
 const prismaClient_1 = __importDefault(require("../lib/prismaClient"));
 const router = (0, express_1.Router)();
-//busca os dados da tela inicio
+// Busca os dados da tela inicial
 router.get("/:restauranteId", async (req, res) => {
     try {
         const restauranteId = Number(req.params.restauranteId);
-        //data limite para produtos proximos do vencimento
+        // Data limite para produtos próximos do vencimento
         const dataLimite = new Date();
         dataLimite.setDate(dataLimite.getDate() + 7);
-        //busca os produtos do restaurante
+        // Só produtos ATIVOS: os já aproveitados/não aproveitados não contam mais no estoque.
         const produtos = await prismaClient_1.default.produto.findMany({
             where: {
                 restauranteId: restauranteId,
-                status: {
-                    not: "REMOVIDO"
-                }
+                status: "ATIVO"
             }
         });
-        //conta os produtos
+        // Conta os produtos
         const totalProdutos = produtos.length;
-        //conta os produtos proximos do vencimento
+        // Conta os produtos próximos do vencimento
         let produtosVencendo = 0;
         for (const produto of produtos) {
             if (produto.dataValidade <= dataLimite) {
                 produtosVencendo++;
             }
         }
-        //conta os produtos esgotados
+        // Conta os produtos esgotados
         let produtosEsgotados = 0;
         for (const produto of produtos) {
             if (produto.status === "ESGOTADO") {
                 produtosEsgotados++;
             }
         }
-        //busca os registros de impacto
+        // Busca os registros de impacto
         const registros = await prismaClient_1.default.registroImpacto.findMany({
             where: {
                 restauranteId: restauranteId
             }
         });
-        //calcula os alimentos salvos
+        // Calcula os alimentos salvos
         let alimentosSalvos = 0;
         let alimentosDesperdicados = 0;
+        // Considera apenas registros em kg
         for (const registro of registros) {
+            const ehKg = !registro.unidade ||
+                registro.unidade.toLowerCase() === "kg";
+            if (!ehKg)
+                continue; // Itens em "un" não entram no total em kg.
             if (registro.foiAproveitado) {
                 alimentosSalvos += registro.quantidadeKg;
             }
@@ -55,20 +58,20 @@ router.get("/:restauranteId", async (req, res) => {
                 alimentosDesperdicados += registro.quantidadeKg;
             }
         }
-        //calcula a redução de resíduos
+        // Calcula a redução de resíduos
         const totalKg = alimentosSalvos + alimentosDesperdicados;
         let reducaoResiduos = 0;
         if (totalKg > 0) {
             reducaoResiduos = (alimentosSalvos / totalKg) * 100;
         }
-        //conta os itens que ainda precisam ser comprados
+        // Conta os itens que ainda precisam ser comprados
         const itensParaComprar = await prismaClient_1.default.itemListaCompras.count({
             where: {
                 restauranteId: restauranteId,
                 comprado: false
             }
         });
-        //conta quantos produtos existem em cada local
+        // Conta quantos produtos existem em cada local
         const geladeira = produtos.filter(produto => produto.localArmazenamento === "GELADEIRA").length;
         const freezer = produtos.filter(produto => produto.localArmazenamento === "FREEZER").length;
         const despensa = produtos.filter(produto => produto.localArmazenamento === "DESPENSA").length;

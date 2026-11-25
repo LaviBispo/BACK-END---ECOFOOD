@@ -64,14 +64,16 @@ model Produto {
 }
 
 model RegistroImpacto {
-  id             Int                 @id @default(autoincrement())
-  produtoId      Int
-  produto        Produto             @relation(fields: [produtoId], references: [id])
-  restauranteId  Int
-  restaurante    RestauranteCadastro @relation(fields: [restauranteId], references: [id])
-  quantidadeKg   Float
-  foiAproveitado Boolean
-  criadoEm       DateTime            @default(now())
+  id                  Int                 @id @default(autoincrement())
+  produtoId           Int
+  produto             Produto             @relation(fields: [produtoId], references: [id])
+  restauranteId       Int
+  restaurante         RestauranteCadastro @relation(fields: [restauranteId], references: [id])
+  quantidadeKg        Float
+  quantidadeUtilizada Float?
+  unidade             String?
+  foiAproveitado      Boolean
+  criadoEm            DateTime            @default(now())
 
   @@map("registros_impacto")
 }

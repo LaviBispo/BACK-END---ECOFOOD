@@ -146,7 +146,11 @@ router.post('/esqueci-senha', limitadorEsqueciSenha, async (req, res) => {
                 resetPasswordExpires: new Date(Date.now() + 60 * 60 * 1000), // 1 hora
             },
         });
+<<<<<<< HEAD
         const link = `${process.env.API_URL}/redefinir-senha?token=${token}`;
+=======
+        const link = `${process.env.FRONTEND_URL}/redefinir-senha?token=${token}`;
+>>>>>>> 44787d62e3f93716e629714720278a492d1e4d43
         await (0, mailer_1.enviarEmailRedefinicao)(usuario.email, usuario.name, link);
         return res.status(200).json(respostaPadrao);
     }

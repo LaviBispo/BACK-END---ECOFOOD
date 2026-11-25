@@ -3,94 +3,99 @@ import prisma from '../lib/prismaClient';
 
 const router = Router();
 
-//busca os dados da tela inicio
+// Busca os dados da tela inicial
 router.get("/:restauranteId", async (req: Request, res: Response) => {
   try {
-    const restauranteId = Number(req.params.restauranteId)
+    const restauranteId = Number(req.params.restauranteId);
 
-    //data limite para produtos proximos do vencimento
-    const dataLimite = new Date()
-    dataLimite.setDate(dataLimite.getDate() + 7)
+    // Data limite para produtos próximos do vencimento
+    const dataLimite = new Date();
+    dataLimite.setDate(dataLimite.getDate() + 7);
 
-    //busca os produtos do restaurante
+    // Só produtos ATIVOS: os já aproveitados/não aproveitados não contam mais no estoque.
     const produtos = await prisma.produto.findMany({
       where: {
         restauranteId: restauranteId,
-        status: {
-          not: "REMOVIDO"
-        }
+        status: "ATIVO"
       }
-    })
+    });
 
-    //conta os produtos
-    const totalProdutos = produtos.length
+    // Conta os produtos
+    const totalProdutos = produtos.length;
 
-    //conta os produtos proximos do vencimento
-    let produtosVencendo = 0
+    // Conta os produtos próximos do vencimento
+    let produtosVencendo = 0;
 
     for (const produto of produtos) {
       if (produto.dataValidade <= dataLimite) {
-        produtosVencendo++
+        produtosVencendo++;
       }
     }
 
-    //conta os produtos esgotados
-    let produtosEsgotados = 0
+    // Conta os produtos esgotados
+    let produtosEsgotados = 0;
 
     for (const produto of produtos) {
       if (produto.status === "ESGOTADO") {
-        produtosEsgotados++
+        produtosEsgotados++;
       }
     }
 
-    //busca os registros de impacto
+    // Busca os registros de impacto
     const registros = await prisma.registroImpacto.findMany({
       where: {
         restauranteId: restauranteId
       }
-    })
+    });
 
-    //calcula os alimentos salvos
-    let alimentosSalvos = 0
-    let alimentosDesperdicados = 0
+    // Calcula os alimentos salvos
+    let alimentosSalvos = 0;
+    let alimentosDesperdicados = 0;
 
+    // Considera apenas registros em kg
     for (const registro of registros) {
+      const ehKg =
+        !registro.unidade ||
+        registro.unidade.toLowerCase() === "kg";
+
+      if (!ehKg) continue; // Itens em "un" não entram no total em kg.
+
       if (registro.foiAproveitado) {
-        alimentosSalvos += registro.quantidadeKg
+        alimentosSalvos += registro.quantidadeKg;
       } else {
-        alimentosDesperdicados += registro.quantidadeKg
+        alimentosDesperdicados += registro.quantidadeKg;
       }
     }
 
-    //calcula a redução de resíduos
-    const totalKg = alimentosSalvos + alimentosDesperdicados
+    // Calcula a redução de resíduos
+    const totalKg = alimentosSalvos + alimentosDesperdicados;
 
-    let reducaoResiduos = 0
+    let reducaoResiduos = 0;
 
     if (totalKg > 0) {
-      reducaoResiduos = (alimentosSalvos / totalKg) * 100
+      reducaoResiduos = (alimentosSalvos / totalKg) * 100;
     }
 
-    //conta os itens que ainda precisam ser comprados
+    // Conta os itens que ainda precisam ser comprados
     const itensParaComprar = await prisma.itemListaCompras.count({
       where: {
         restauranteId: restauranteId,
         comprado: false
       }
-    })
+    });
 
-    //conta quantos produtos existem em cada local
+    // Conta quantos produtos existem em cada local
     const geladeira = produtos.filter(
       produto => produto.localArmazenamento === "GELADEIRA"
-    ).length
+    ).length;
 
     const freezer = produtos.filter(
       produto => produto.localArmazenamento === "FREEZER"
-    ).length
+    ).length;
 
     const despensa = produtos.filter(
       produto => produto.localArmazenamento === "DESPENSA"
-    ).length
+    ).length;
 
     res.json({
       indicadores: {
@@ -124,11 +129,11 @@ router.get("/:restauranteId", async (req: Request, res: Response) => {
         alimentosSalvos: Number(alimentosSalvos.toFixed(2)),
         reducaoResiduos: Number(reducaoResiduos.toFixed(2))
       }
-    })
+    });
 
   } catch (error) {
-    res.status(500).json({ error: "erro interno do servidor" })
+    res.status(500).json({ error: "erro interno do servidor" });
   }
-})
+});
 
-export default router
+export default router;

@@ -160,6 +160,8 @@ exports.Prisma.RegistroImpactoScalarFieldEnum = {
   produtoId: 'produtoId',
   restauranteId: 'restauranteId',
   quantidadeKg: 'quantidadeKg',
+  quantidadeUtilizada: 'quantidadeUtilizada',
+  unidade: 'unidade',
   foiAproveitado: 'foiAproveitado',
   criadoEm: 'criadoEm'
 };

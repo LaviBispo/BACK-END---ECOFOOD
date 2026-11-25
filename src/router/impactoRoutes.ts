@@ -1,96 +1,148 @@
+
 import { Router, Request, Response } from 'express';
 import prisma from '../lib/prismaClient';
 
 const router = Router();
 
-//busca os dados do impacto
+// kg: registros de produtos em "kg".
+// unidades: registros de produtos em outras unidades.
 router.get("/:restauranteId", async (req: Request, res: Response) => {
     try {
-        const restauranteId = Number(req.params.restauranteId)
-        const prismaImpacto = prisma as any
+        const restauranteId = Number(req.params.restauranteId);
 
-        const registros = await prismaImpacto.registroImpacto.findMany({
-            where: {
-                restauranteId: restauranteId
-            }
-        })
+        if (!Number.isInteger(restauranteId) || restauranteId <= 0) {
+            return res.status(400).json({
+                error: "ID do restaurante inválido"
+            });
+        }
 
-        //calcula a quantidade de alimentos salvos
-        let alimentosSalvos = 0
+        // Cada restaurante só enxerga o próprio impacto.
+        if (restauranteId !== req.restaurantId) {
+            return res.status(403).json({
+                error: "Acesso negado"
+            });
+        }
 
-        //conta as escolhas conscientes 
-        let escolhasConscientes = 0
+        const registros = await prisma.registroImpacto.findMany({
+            where: { restauranteId }
+        });
 
-        //calcula o total de alimentos registrados
-        let totalAlimentos = 0
+        let kgAproveitados = 0;
+        let kgDesperdicados = 0;
+        let unidadesAproveitadas = 0;
+        let unidadesDesperdicadas = 0;
+        let escolhasConscientes = 0;
 
         for (const registro of registros) {
-            totalAlimentos += registro.quantidadeKg
+            const ehKg =
+                !registro.unidade ||
+                registro.unidade.toLowerCase() === 'kg';
 
-            if (registro.foiAproveitado) {
-                alimentosSalvos += registro.quantidadeKg
-                escolhasConscientes++
-            }
-        }
+            if (ehKg) {
+                const kg = Number(registro.quantidadeKg);
 
-        //calcula a porcentagem de redução de resíduos
-        let reducaoResiduos = 0
+                if (registro.foiAproveitado) {
+                    kgAproveitados += kg;
+                } else {
+                    kgDesperdicados += kg;
+                }
+            } else {
+                const qtd = Number(registro.quantidadeUtilizada ?? 0);
 
-        if (totalAlimentos > 0) {
-            reducaoResiduos = (alimentosSalvos / totalAlimentos) * 100
-        }
-
-        //pega a data de hoje
-        const hoje = new Date()
-
-        //encontra o começo da semana atual
-        const inicioSemana = new Date(hoje)
-        const diaSemana = hoje.getDay()
-
-        if (diaSemana === 0) {
-            inicioSemana.setDate(hoje.getDate() - 6)
-        } else {
-            inicioSemana.setDate(hoje.getDate() - (diaSemana - 1))
-        }
-
-        inicioSemana.setHours(0, 0, 0, 0)
-
-        //cria as 5 semanas
-        const semanas = [
-            { semana: "Sem 1", kg: 0 },
-            { semana: "Sem 2", kg: 0 },
-            { semana: "Sem 3", kg: 0 },
-            { semana: "Sem 4", kg: 0 },
-            { semana: "Sem 5", kg: 0 }
-        ]
-
-        //separa os alimentos salvos por semana
-        for (const registro of registros) {
-            if (registro.foiAproveitado) {
-
-                const diferenca = inicioSemana.getTime() - registro.criadoEm.getTime()
-
-                const dias = Math.floor(diferenca / (1000 * 60 * 60 * 24))
-
-                const semana = 4 - Math.floor(dias / 7)
-
-                if (semana >= 0 && semana < 5) {
-                    semanas[semana].kg += registro.quantidadeKg
+                if (registro.foiAproveitado) {
+                    unidadesAproveitadas += qtd;
+                } else {
+                    unidadesDesperdicadas += qtd;
                 }
             }
+
+            if (registro.foiAproveitado) {
+                escolhasConscientes++;
+            }
         }
 
-        res.json({
-            alimentosSalvos: Number(alimentosSalvos.toFixed(2)),
+        const totalKg = kgAproveitados + kgDesperdicados;
+
+        const reducaoResiduos =
+            totalKg > 0
+                ? (kgAproveitados / totalKg) * 100
+                : 0;
+
+        // Início da semana atual (segunda-feira).
+        const hoje = new Date();
+        const inicioSemana = new Date(hoje);
+        const diaSemana = hoje.getDay();
+
+        if (diaSemana === 0) {
+            inicioSemana.setDate(hoje.getDate() - 6);
+        } else {
+            inicioSemana.setDate(
+                hoje.getDate() - (diaSemana - 1)
+            );
+        }
+
+        inicioSemana.setHours(0, 0, 0, 0);
+
+        // Evolução das últimas 5 semanas (kg).
+        const semanas = [];
+
+        for (let i = 4; i >= 0; i--) {
+            const inicio = new Date(inicioSemana);
+            inicio.setDate(inicio.getDate() - (i * 7));
+
+            const fim = new Date(inicio);
+            fim.setDate(fim.getDate() + 7);
+
+            let salvos = 0;
+            let desperdicados = 0;
+
+            for (const registro of registros) {
+                const data = new Date(registro.criadoEm);
+
+                const ehKg =
+                    !registro.unidade ||
+                    registro.unidade.toLowerCase() === 'kg';
+
+                if (!ehKg) continue;
+
+                if (data >= inicio && data < fim) {
+                    const kg = Number(registro.quantidadeKg);
+
+                    if (registro.foiAproveitado) {
+                        salvos += kg;
+                    } else {
+                        desperdicados += kg;
+                    }
+                }
+            }
+
+            semanas.push({
+                semana: `Sem ${5 - i}`,
+                alimentosSalvos: Number(salvos.toFixed(2)),
+                desperdicios: Number(desperdicados.toFixed(2))
+            });
+        }
+
+        return res.json({
+            totalAlimentos: Number(totalKg.toFixed(2)),
+            alimentosSalvos: Number(kgAproveitados.toFixed(2)),
+            desperdicioTotal: Number(kgDesperdicados.toFixed(2)),
             reducaoResiduos: Number(reducaoResiduos.toFixed(2)),
-            escolhasConscientes: escolhasConscientes,
+            escolhasConscientes,
+            unidades: {
+                aproveitadas: Number(unidadesAproveitadas.toFixed(2)),
+                desperdicadas: Number(unidadesDesperdicadas.toFixed(2))
+            },
             evolucao: semanas
-        })
+        });
 
     } catch (error) {
-        console.log("ERROR:", error)
-        res.status(500).json({ error: "erro interno do servidor" })
+        console.log("ERROR:", error);
+
+        return res.status(500).json({
+            error: "Erro interno do servidor"
+        });
     }
-})
+});
 
 export default router;
