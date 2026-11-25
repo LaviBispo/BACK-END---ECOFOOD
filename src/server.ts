@@ -13,8 +13,10 @@ import notificacoesRouter from "./router/notificacoesRoutes"
 import { authenticate } from "./middlewares/auth"
 import { validarSenha } from './router/validar-senhaRoutes'
 import senhaRoutes from './router/senhaRoutes';
+import paginaRedefinirRoutes from './router/paginaRedefinirRoutes';
 import "dotenv/config";
 import cors from "cors"
+
 
 const app = express()
 app.use(cors())
@@ -31,7 +33,9 @@ app.use("/api/status-produtos", authenticate, statusProdutosRouter)
 app.use("/api/perfil", authenticate, perfilRouter)
 app.use("/api/notificacoes", authenticate, notificacoesRouter)
 app.use("/api/validar-senha", validarSenha)
-app.use
+app.use("/api/redefinir-senha", senhaRoutes)
+app.use("/", paginaRedefinirRoutes)
+app.use("/api/pagina-redefinir-senha", paginaRedefinirRoutes)
 
 app.listen(3000, () => {
     console.log("Servidor rodando na porta 3000")

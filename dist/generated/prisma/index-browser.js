@@ -125,6 +125,8 @@ exports.Prisma.RestauranteCadastroScalarFieldEnum = {
   telefone: 'telefone',
   email: 'email',
   cnpj: 'cnpj',
+  resetPasswordToken: 'resetPasswordToken',
+  resetPasswordExpires: 'resetPasswordExpires',
   atualizadoEm: 'atualizadoEm'
 };
 

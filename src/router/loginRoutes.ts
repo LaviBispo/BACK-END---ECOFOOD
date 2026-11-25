@@ -10,6 +10,11 @@ import { validarSenha } from './validar-senhaRoutes';
 
 const router = Router();
 
+  router.get('/abrir-app', (req: Request, res: Response) => {
+  const token = req.query.token;
+  res.redirect(`ecofood://esqueciSenha?token=${token}`);
+});
+
 router.post('/', async (req: Request, res: Response) => {
   try {
     const { email, senha } = req.body;
@@ -175,7 +180,7 @@ router.post(
         },
       });
 
-      const link = `${process.env.FRONTEND_URL}/redefinir-senha?token=${token}`;
+     const link = `${process.env.API_URL}/redefinir-senha?token=${token}`;
 
       await enviarEmailRedefinicao(usuario.email, usuario.name, link);
 
