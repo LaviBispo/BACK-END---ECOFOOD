@@ -125,6 +125,8 @@ exports.Prisma.RestauranteCadastroScalarFieldEnum = {
   telefone: 'telefone',
   email: 'email',
   cnpj: 'cnpj',
+  resetPasswordToken: 'resetPasswordToken',
+  resetPasswordExpires: 'resetPasswordExpires',
   atualizadoEm: 'atualizadoEm'
 };
 
@@ -158,6 +160,8 @@ exports.Prisma.RegistroImpactoScalarFieldEnum = {
   produtoId: 'produtoId',
   restauranteId: 'restauranteId',
   quantidadeKg: 'quantidadeKg',
+  quantidadeUtilizada: 'quantidadeUtilizada',
+  unidade: 'unidade',
   foiAproveitado: 'foiAproveitado',
   criadoEm: 'criadoEm'
 };

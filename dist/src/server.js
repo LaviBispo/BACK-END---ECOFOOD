@@ -15,6 +15,8 @@ const status_produtosRoutes_1 = __importDefault(require("./router/status-produto
 const perfilRoutes_1 = __importDefault(require("./router/perfilRoutes"));
 const notificacoesRoutes_1 = __importDefault(require("./router/notificacoesRoutes"));
 const auth_1 = require("./middlewares/auth");
+const validar_senhaRoutes_1 = require("./router/validar-senhaRoutes");
+const senhaRoutes_1 = __importDefault(require("./router/senhaRoutes"));
 require("dotenv/config");
 const cors_1 = __importDefault(require("cors"));
 const app = (0, express_1.default)();
@@ -30,6 +32,8 @@ app.use("/api/detalhes-produto", auth_1.authenticate, detalhes_produtoRoutes_1.d
 app.use("/api/status-produtos", auth_1.authenticate, status_produtosRoutes_1.default);
 app.use("/api/perfil", auth_1.authenticate, perfilRoutes_1.default);
 app.use("/api/notificacoes", auth_1.authenticate, notificacoesRoutes_1.default);
+app.use("/api/validar-senha", validar_senhaRoutes_1.validarSenha);
+app.use("/api/senha", senhaRoutes_1.default);
 app.listen(3000, () => {
     console.log("Servidor rodando na porta 3000");
 });

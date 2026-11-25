@@ -1374,6 +1374,8 @@ export namespace Prisma {
     telefone: string | null
     email: string | null
     cnpj: string | null
+    resetPasswordToken: string | null
+    resetPasswordExpires: Date | null
     atualizadoEm: Date | null
   }
 
@@ -1385,6 +1387,8 @@ export namespace Prisma {
     telefone: string | null
     email: string | null
     cnpj: string | null
+    resetPasswordToken: string | null
+    resetPasswordExpires: Date | null
     atualizadoEm: Date | null
   }
 
@@ -1396,6 +1400,8 @@ export namespace Prisma {
     telefone: number
     email: number
     cnpj: number
+    resetPasswordToken: number
+    resetPasswordExpires: number
     atualizadoEm: number
     _all: number
   }
@@ -1417,6 +1423,8 @@ export namespace Prisma {
     telefone?: true
     email?: true
     cnpj?: true
+    resetPasswordToken?: true
+    resetPasswordExpires?: true
     atualizadoEm?: true
   }
 
@@ -1428,6 +1436,8 @@ export namespace Prisma {
     telefone?: true
     email?: true
     cnpj?: true
+    resetPasswordToken?: true
+    resetPasswordExpires?: true
     atualizadoEm?: true
   }
 
@@ -1439,6 +1449,8 @@ export namespace Prisma {
     telefone?: true
     email?: true
     cnpj?: true
+    resetPasswordToken?: true
+    resetPasswordExpires?: true
     atualizadoEm?: true
     _all?: true
   }
@@ -1537,6 +1549,8 @@ export namespace Prisma {
     telefone: string
     email: string
     cnpj: string
+    resetPasswordToken: string | null
+    resetPasswordExpires: Date | null
     atualizadoEm: Date
     _count: RestauranteCadastroCountAggregateOutputType | null
     _avg: RestauranteCadastroAvgAggregateOutputType | null
@@ -1567,6 +1581,8 @@ export namespace Prisma {
     telefone?: boolean
     email?: boolean
     cnpj?: boolean
+    resetPasswordToken?: boolean
+    resetPasswordExpires?: boolean
     atualizadoEm?: boolean
     usuarios?: boolean | RestauranteCadastro$usuariosArgs<ExtArgs>
     produtos?: boolean | RestauranteCadastro$produtosArgs<ExtArgs>
@@ -1583,6 +1599,8 @@ export namespace Prisma {
     telefone?: boolean
     email?: boolean
     cnpj?: boolean
+    resetPasswordToken?: boolean
+    resetPasswordExpires?: boolean
     atualizadoEm?: boolean
   }, ExtArgs["result"]["restauranteCadastro"]>
 
@@ -1594,6 +1612,8 @@ export namespace Prisma {
     telefone?: boolean
     email?: boolean
     cnpj?: boolean
+    resetPasswordToken?: boolean
+    resetPasswordExpires?: boolean
     atualizadoEm?: boolean
   }, ExtArgs["result"]["restauranteCadastro"]>
 
@@ -1605,10 +1625,12 @@ export namespace Prisma {
     telefone?: boolean
     email?: boolean
     cnpj?: boolean
+    resetPasswordToken?: boolean
+    resetPasswordExpires?: boolean
     atualizadoEm?: boolean
   }
 
-  export type RestauranteCadastroOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "name" | "password" | "endereco" | "telefone" | "email" | "cnpj" | "atualizadoEm", ExtArgs["result"]["restauranteCadastro"]>
+  export type RestauranteCadastroOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "name" | "password" | "endereco" | "telefone" | "email" | "cnpj" | "resetPasswordToken" | "resetPasswordExpires" | "atualizadoEm", ExtArgs["result"]["restauranteCadastro"]>
   export type RestauranteCadastroInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     usuarios?: boolean | RestauranteCadastro$usuariosArgs<ExtArgs>
     produtos?: boolean | RestauranteCadastro$produtosArgs<ExtArgs>
@@ -1635,6 +1657,8 @@ export namespace Prisma {
       telefone: string
       email: string
       cnpj: string
+      resetPasswordToken: string | null
+      resetPasswordExpires: Date | null
       atualizadoEm: Date
     }, ExtArgs["result"]["restauranteCadastro"]>
     composites: {}
@@ -2070,6 +2094,8 @@ export namespace Prisma {
     readonly telefone: FieldRef<"RestauranteCadastro", 'String'>
     readonly email: FieldRef<"RestauranteCadastro", 'String'>
     readonly cnpj: FieldRef<"RestauranteCadastro", 'String'>
+    readonly resetPasswordToken: FieldRef<"RestauranteCadastro", 'String'>
+    readonly resetPasswordExpires: FieldRef<"RestauranteCadastro", 'DateTime'>
     readonly atualizadoEm: FieldRef<"RestauranteCadastro", 'DateTime'>
   }
     
@@ -4942,6 +4968,7 @@ export namespace Prisma {
     produtoId: number | null
     restauranteId: number | null
     quantidadeKg: number | null
+    quantidadeUtilizada: number | null
   }
 
   export type RegistroImpactoSumAggregateOutputType = {
@@ -4949,6 +4976,7 @@ export namespace Prisma {
     produtoId: number | null
     restauranteId: number | null
     quantidadeKg: number | null
+    quantidadeUtilizada: number | null
   }
 
   export type RegistroImpactoMinAggregateOutputType = {
@@ -4956,6 +4984,8 @@ export namespace Prisma {
     produtoId: number | null
     restauranteId: number | null
     quantidadeKg: number | null
+    quantidadeUtilizada: number | null
+    unidade: string | null
     foiAproveitado: boolean | null
     criadoEm: Date | null
   }
@@ -4965,6 +4995,8 @@ export namespace Prisma {
     produtoId: number | null
     restauranteId: number | null
     quantidadeKg: number | null
+    quantidadeUtilizada: number | null
+    unidade: string | null
     foiAproveitado: boolean | null
     criadoEm: Date | null
   }
@@ -4974,6 +5006,8 @@ export namespace Prisma {
     produtoId: number
     restauranteId: number
     quantidadeKg: number
+    quantidadeUtilizada: number
+    unidade: number
     foiAproveitado: number
     criadoEm: number
     _all: number
@@ -4985,6 +5019,7 @@ export namespace Prisma {
     produtoId?: true
     restauranteId?: true
     quantidadeKg?: true
+    quantidadeUtilizada?: true
   }
 
   export type RegistroImpactoSumAggregateInputType = {
@@ -4992,6 +5027,7 @@ export namespace Prisma {
     produtoId?: true
     restauranteId?: true
     quantidadeKg?: true
+    quantidadeUtilizada?: true
   }
 
   export type RegistroImpactoMinAggregateInputType = {
@@ -4999,6 +5035,8 @@ export namespace Prisma {
     produtoId?: true
     restauranteId?: true
     quantidadeKg?: true
+    quantidadeUtilizada?: true
+    unidade?: true
     foiAproveitado?: true
     criadoEm?: true
   }
@@ -5008,6 +5046,8 @@ export namespace Prisma {
     produtoId?: true
     restauranteId?: true
     quantidadeKg?: true
+    quantidadeUtilizada?: true
+    unidade?: true
     foiAproveitado?: true
     criadoEm?: true
   }
@@ -5017,6 +5057,8 @@ export namespace Prisma {
     produtoId?: true
     restauranteId?: true
     quantidadeKg?: true
+    quantidadeUtilizada?: true
+    unidade?: true
     foiAproveitado?: true
     criadoEm?: true
     _all?: true
@@ -5113,6 +5155,8 @@ export namespace Prisma {
     produtoId: number
     restauranteId: number
     quantidadeKg: number
+    quantidadeUtilizada: number | null
+    unidade: string | null
     foiAproveitado: boolean
     criadoEm: Date
     _count: RegistroImpactoCountAggregateOutputType | null
@@ -5141,6 +5185,8 @@ export namespace Prisma {
     produtoId?: boolean
     restauranteId?: boolean
     quantidadeKg?: boolean
+    quantidadeUtilizada?: boolean
+    unidade?: boolean
     foiAproveitado?: boolean
     criadoEm?: boolean
     produto?: boolean | ProdutoDefaultArgs<ExtArgs>
@@ -5152,6 +5198,8 @@ export namespace Prisma {
     produtoId?: boolean
     restauranteId?: boolean
     quantidadeKg?: boolean
+    quantidadeUtilizada?: boolean
+    unidade?: boolean
     foiAproveitado?: boolean
     criadoEm?: boolean
     produto?: boolean | ProdutoDefaultArgs<ExtArgs>
@@ -5163,6 +5211,8 @@ export namespace Prisma {
     produtoId?: boolean
     restauranteId?: boolean
     quantidadeKg?: boolean
+    quantidadeUtilizada?: boolean
+    unidade?: boolean
     foiAproveitado?: boolean
     criadoEm?: boolean
     produto?: boolean | ProdutoDefaultArgs<ExtArgs>
@@ -5174,11 +5224,13 @@ export namespace Prisma {
     produtoId?: boolean
     restauranteId?: boolean
     quantidadeKg?: boolean
+    quantidadeUtilizada?: boolean
+    unidade?: boolean
     foiAproveitado?: boolean
     criadoEm?: boolean
   }
 
-  export type RegistroImpactoOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "produtoId" | "restauranteId" | "quantidadeKg" | "foiAproveitado" | "criadoEm", ExtArgs["result"]["registroImpacto"]>
+  export type RegistroImpactoOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "produtoId" | "restauranteId" | "quantidadeKg" | "quantidadeUtilizada" | "unidade" | "foiAproveitado" | "criadoEm", ExtArgs["result"]["registroImpacto"]>
   export type RegistroImpactoInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     produto?: boolean | ProdutoDefaultArgs<ExtArgs>
     restaurante?: boolean | RestauranteCadastroDefaultArgs<ExtArgs>
@@ -5203,6 +5255,8 @@ export namespace Prisma {
       produtoId: number
       restauranteId: number
       quantidadeKg: number
+      quantidadeUtilizada: number | null
+      unidade: string | null
       foiAproveitado: boolean
       criadoEm: Date
     }, ExtArgs["result"]["registroImpacto"]>
@@ -5634,6 +5688,8 @@ export namespace Prisma {
     readonly produtoId: FieldRef<"RegistroImpacto", 'Int'>
     readonly restauranteId: FieldRef<"RegistroImpacto", 'Int'>
     readonly quantidadeKg: FieldRef<"RegistroImpacto", 'Float'>
+    readonly quantidadeUtilizada: FieldRef<"RegistroImpacto", 'Float'>
+    readonly unidade: FieldRef<"RegistroImpacto", 'String'>
     readonly foiAproveitado: FieldRef<"RegistroImpacto", 'Boolean'>
     readonly criadoEm: FieldRef<"RegistroImpacto", 'DateTime'>
   }
@@ -7240,6 +7296,8 @@ export namespace Prisma {
     telefone: 'telefone',
     email: 'email',
     cnpj: 'cnpj',
+    resetPasswordToken: 'resetPasswordToken',
+    resetPasswordExpires: 'resetPasswordExpires',
     atualizadoEm: 'atualizadoEm'
   };
 
@@ -7282,6 +7340,8 @@ export namespace Prisma {
     produtoId: 'produtoId',
     restauranteId: 'restauranteId',
     quantidadeKg: 'quantidadeKg',
+    quantidadeUtilizada: 'quantidadeUtilizada',
+    unidade: 'unidade',
     foiAproveitado: 'foiAproveitado',
     criadoEm: 'criadoEm'
   };
@@ -7375,6 +7435,8 @@ export namespace Prisma {
     telefone?: StringFilter<"RestauranteCadastro"> | string
     email?: StringFilter<"RestauranteCadastro"> | string
     cnpj?: StringFilter<"RestauranteCadastro"> | string
+    resetPasswordToken?: StringNullableFilter<"RestauranteCadastro"> | string | null
+    resetPasswordExpires?: DateTimeNullableFilter<"RestauranteCadastro"> | Date | string | null
     atualizadoEm?: DateTimeFilter<"RestauranteCadastro"> | Date | string
     usuarios?: UsuarioPerfilListRelationFilter
     produtos?: ProdutoListRelationFilter
@@ -7390,6 +7452,8 @@ export namespace Prisma {
     telefone?: SortOrder
     email?: SortOrder
     cnpj?: SortOrder
+    resetPasswordToken?: SortOrderInput | SortOrder
+    resetPasswordExpires?: SortOrderInput | SortOrder
     atualizadoEm?: SortOrder
     usuarios?: UsuarioPerfilOrderByRelationAggregateInput
     produtos?: ProdutoOrderByRelationAggregateInput
@@ -7408,6 +7472,8 @@ export namespace Prisma {
     password?: StringFilter<"RestauranteCadastro"> | string
     endereco?: StringFilter<"RestauranteCadastro"> | string
     telefone?: StringFilter<"RestauranteCadastro"> | string
+    resetPasswordToken?: StringNullableFilter<"RestauranteCadastro"> | string | null
+    resetPasswordExpires?: DateTimeNullableFilter<"RestauranteCadastro"> | Date | string | null
     atualizadoEm?: DateTimeFilter<"RestauranteCadastro"> | Date | string
     usuarios?: UsuarioPerfilListRelationFilter
     produtos?: ProdutoListRelationFilter
@@ -7423,6 +7489,8 @@ export namespace Prisma {
     telefone?: SortOrder
     email?: SortOrder
     cnpj?: SortOrder
+    resetPasswordToken?: SortOrderInput | SortOrder
+    resetPasswordExpires?: SortOrderInput | SortOrder
     atualizadoEm?: SortOrder
     _count?: RestauranteCadastroCountOrderByAggregateInput
     _avg?: RestauranteCadastroAvgOrderByAggregateInput
@@ -7442,6 +7510,8 @@ export namespace Prisma {
     telefone?: StringWithAggregatesFilter<"RestauranteCadastro"> | string
     email?: StringWithAggregatesFilter<"RestauranteCadastro"> | string
     cnpj?: StringWithAggregatesFilter<"RestauranteCadastro"> | string
+    resetPasswordToken?: StringNullableWithAggregatesFilter<"RestauranteCadastro"> | string | null
+    resetPasswordExpires?: DateTimeNullableWithAggregatesFilter<"RestauranteCadastro"> | Date | string | null
     atualizadoEm?: DateTimeWithAggregatesFilter<"RestauranteCadastro"> | Date | string
   }
 
@@ -7615,6 +7685,8 @@ export namespace Prisma {
     produtoId?: IntFilter<"RegistroImpacto"> | number
     restauranteId?: IntFilter<"RegistroImpacto"> | number
     quantidadeKg?: FloatFilter<"RegistroImpacto"> | number
+    quantidadeUtilizada?: FloatNullableFilter<"RegistroImpacto"> | number | null
+    unidade?: StringNullableFilter<"RegistroImpacto"> | string | null
     foiAproveitado?: BoolFilter<"RegistroImpacto"> | boolean
     criadoEm?: DateTimeFilter<"RegistroImpacto"> | Date | string
     produto?: XOR<ProdutoScalarRelationFilter, ProdutoWhereInput>
@@ -7626,6 +7698,8 @@ export namespace Prisma {
     produtoId?: SortOrder
     restauranteId?: SortOrder
     quantidadeKg?: SortOrder
+    quantidadeUtilizada?: SortOrderInput | SortOrder
+    unidade?: SortOrderInput | SortOrder
     foiAproveitado?: SortOrder
     criadoEm?: SortOrder
     produto?: ProdutoOrderByWithRelationInput
@@ -7640,6 +7714,8 @@ export namespace Prisma {
     produtoId?: IntFilter<"RegistroImpacto"> | number
     restauranteId?: IntFilter<"RegistroImpacto"> | number
     quantidadeKg?: FloatFilter<"RegistroImpacto"> | number
+    quantidadeUtilizada?: FloatNullableFilter<"RegistroImpacto"> | number | null
+    unidade?: StringNullableFilter<"RegistroImpacto"> | string | null
     foiAproveitado?: BoolFilter<"RegistroImpacto"> | boolean
     criadoEm?: DateTimeFilter<"RegistroImpacto"> | Date | string
     produto?: XOR<ProdutoScalarRelationFilter, ProdutoWhereInput>
@@ -7651,6 +7727,8 @@ export namespace Prisma {
     produtoId?: SortOrder
     restauranteId?: SortOrder
     quantidadeKg?: SortOrder
+    quantidadeUtilizada?: SortOrderInput | SortOrder
+    unidade?: SortOrderInput | SortOrder
     foiAproveitado?: SortOrder
     criadoEm?: SortOrder
     _count?: RegistroImpactoCountOrderByAggregateInput
@@ -7668,6 +7746,8 @@ export namespace Prisma {
     produtoId?: IntWithAggregatesFilter<"RegistroImpacto"> | number
     restauranteId?: IntWithAggregatesFilter<"RegistroImpacto"> | number
     quantidadeKg?: FloatWithAggregatesFilter<"RegistroImpacto"> | number
+    quantidadeUtilizada?: FloatNullableWithAggregatesFilter<"RegistroImpacto"> | number | null
+    unidade?: StringNullableWithAggregatesFilter<"RegistroImpacto"> | string | null
     foiAproveitado?: BoolWithAggregatesFilter<"RegistroImpacto"> | boolean
     criadoEm?: DateTimeWithAggregatesFilter<"RegistroImpacto"> | Date | string
   }
@@ -7761,6 +7841,8 @@ export namespace Prisma {
     telefone: string
     email: string
     cnpj: string
+    resetPasswordToken?: string | null
+    resetPasswordExpires?: Date | string | null
     atualizadoEm?: Date | string
     usuarios?: UsuarioPerfilCreateNestedManyWithoutRestauranteInput
     produtos?: ProdutoCreateNestedManyWithoutRestauranteInput
@@ -7776,6 +7858,8 @@ export namespace Prisma {
     telefone: string
     email: string
     cnpj: string
+    resetPasswordToken?: string | null
+    resetPasswordExpires?: Date | string | null
     atualizadoEm?: Date | string
     usuarios?: UsuarioPerfilUncheckedCreateNestedManyWithoutRestauranteInput
     produtos?: ProdutoUncheckedCreateNestedManyWithoutRestauranteInput
@@ -7790,6 +7874,8 @@ export namespace Prisma {
     telefone?: StringFieldUpdateOperationsInput | string
     email?: StringFieldUpdateOperationsInput | string
     cnpj?: StringFieldUpdateOperationsInput | string
+    resetPasswordToken?: NullableStringFieldUpdateOperationsInput | string | null
+    resetPasswordExpires?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     atualizadoEm?: DateTimeFieldUpdateOperationsInput | Date | string
     usuarios?: UsuarioPerfilUpdateManyWithoutRestauranteNestedInput
     produtos?: ProdutoUpdateManyWithoutRestauranteNestedInput
@@ -7805,6 +7891,8 @@ export namespace Prisma {
     telefone?: StringFieldUpdateOperationsInput | string
     email?: StringFieldUpdateOperationsInput | string
     cnpj?: StringFieldUpdateOperationsInput | string
+    resetPasswordToken?: NullableStringFieldUpdateOperationsInput | string | null
+    resetPasswordExpires?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     atualizadoEm?: DateTimeFieldUpdateOperationsInput | Date | string
     usuarios?: UsuarioPerfilUncheckedUpdateManyWithoutRestauranteNestedInput
     produtos?: ProdutoUncheckedUpdateManyWithoutRestauranteNestedInput
@@ -7820,6 +7908,8 @@ export namespace Prisma {
     telefone: string
     email: string
     cnpj: string
+    resetPasswordToken?: string | null
+    resetPasswordExpires?: Date | string | null
     atualizadoEm?: Date | string
   }
 
@@ -7830,6 +7920,8 @@ export namespace Prisma {
     telefone?: StringFieldUpdateOperationsInput | string
     email?: StringFieldUpdateOperationsInput | string
     cnpj?: StringFieldUpdateOperationsInput | string
+    resetPasswordToken?: NullableStringFieldUpdateOperationsInput | string | null
+    resetPasswordExpires?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     atualizadoEm?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
@@ -7841,6 +7933,8 @@ export namespace Prisma {
     telefone?: StringFieldUpdateOperationsInput | string
     email?: StringFieldUpdateOperationsInput | string
     cnpj?: StringFieldUpdateOperationsInput | string
+    resetPasswordToken?: NullableStringFieldUpdateOperationsInput | string | null
+    resetPasswordExpires?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     atualizadoEm?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
@@ -8017,6 +8111,8 @@ export namespace Prisma {
 
   export type RegistroImpactoCreateInput = {
     quantidadeKg: number
+    quantidadeUtilizada?: number | null
+    unidade?: string | null
     foiAproveitado: boolean
     criadoEm?: Date | string
     produto: ProdutoCreateNestedOneWithoutRegistrosImpactoInput
@@ -8028,12 +8124,16 @@ export namespace Prisma {
     produtoId: number
     restauranteId: number
     quantidadeKg: number
+    quantidadeUtilizada?: number | null
+    unidade?: string | null
     foiAproveitado: boolean
     criadoEm?: Date | string
   }
 
   export type RegistroImpactoUpdateInput = {
     quantidadeKg?: FloatFieldUpdateOperationsInput | number
+    quantidadeUtilizada?: NullableFloatFieldUpdateOperationsInput | number | null
+    unidade?: NullableStringFieldUpdateOperationsInput | string | null
     foiAproveitado?: BoolFieldUpdateOperationsInput | boolean
     criadoEm?: DateTimeFieldUpdateOperationsInput | Date | string
     produto?: ProdutoUpdateOneRequiredWithoutRegistrosImpactoNestedInput
@@ -8045,6 +8145,8 @@ export namespace Prisma {
     produtoId?: IntFieldUpdateOperationsInput | number
     restauranteId?: IntFieldUpdateOperationsInput | number
     quantidadeKg?: FloatFieldUpdateOperationsInput | number
+    quantidadeUtilizada?: NullableFloatFieldUpdateOperationsInput | number | null
+    unidade?: NullableStringFieldUpdateOperationsInput | string | null
     foiAproveitado?: BoolFieldUpdateOperationsInput | boolean
     criadoEm?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -8054,12 +8156,16 @@ export namespace Prisma {
     produtoId: number
     restauranteId: number
     quantidadeKg: number
+    quantidadeUtilizada?: number | null
+    unidade?: string | null
     foiAproveitado: boolean
     criadoEm?: Date | string
   }
 
   export type RegistroImpactoUpdateManyMutationInput = {
     quantidadeKg?: FloatFieldUpdateOperationsInput | number
+    quantidadeUtilizada?: NullableFloatFieldUpdateOperationsInput | number | null
+    unidade?: NullableStringFieldUpdateOperationsInput | string | null
     foiAproveitado?: BoolFieldUpdateOperationsInput | boolean
     criadoEm?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -8069,6 +8175,8 @@ export namespace Prisma {
     produtoId?: IntFieldUpdateOperationsInput | number
     restauranteId?: IntFieldUpdateOperationsInput | number
     quantidadeKg?: FloatFieldUpdateOperationsInput | number
+    quantidadeUtilizada?: NullableFloatFieldUpdateOperationsInput | number | null
+    unidade?: NullableStringFieldUpdateOperationsInput | string | null
     foiAproveitado?: BoolFieldUpdateOperationsInput | boolean
     criadoEm?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -8185,6 +8293,31 @@ export namespace Prisma {
     not?: NestedStringFilter<$PrismaModel> | string
   }
 
+  export type StringNullableFilter<$PrismaModel = never> = {
+    equals?: string | StringFieldRefInput<$PrismaModel> | null
+    in?: string[] | null
+    notIn?: string[] | null
+    lt?: string | StringFieldRefInput<$PrismaModel>
+    lte?: string | StringFieldRefInput<$PrismaModel>
+    gt?: string | StringFieldRefInput<$PrismaModel>
+    gte?: string | StringFieldRefInput<$PrismaModel>
+    contains?: string | StringFieldRefInput<$PrismaModel>
+    startsWith?: string | StringFieldRefInput<$PrismaModel>
+    endsWith?: string | StringFieldRefInput<$PrismaModel>
+    not?: NestedStringNullableFilter<$PrismaModel> | string | null
+  }
+
+  export type DateTimeNullableFilter<$PrismaModel = never> = {
+    equals?: Date | string | DateTimeFieldRefInput<$PrismaModel> | null
+    in?: Date[] | string[] | null
+    notIn?: Date[] | string[] | null
+    lt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    lte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    not?: NestedDateTimeNullableFilter<$PrismaModel> | Date | string | null
+  }
+
   export type DateTimeFilter<$PrismaModel = never> = {
     equals?: Date | string | DateTimeFieldRefInput<$PrismaModel>
     in?: Date[] | string[]
@@ -8220,6 +8353,11 @@ export namespace Prisma {
     none?: RegistroImpactoWhereInput
   }
 
+  export type SortOrderInput = {
+    sort: SortOrder
+    nulls?: NullsOrder
+  }
+
   export type UsuarioPerfilOrderByRelationAggregateInput = {
     _count?: SortOrder
   }
@@ -8244,6 +8382,8 @@ export namespace Prisma {
     telefone?: SortOrder
     email?: SortOrder
     cnpj?: SortOrder
+    resetPasswordToken?: SortOrder
+    resetPasswordExpires?: SortOrder
     atualizadoEm?: SortOrder
   }
 
@@ -8259,6 +8399,8 @@ export namespace Prisma {
     telefone?: SortOrder
     email?: SortOrder
     cnpj?: SortOrder
+    resetPasswordToken?: SortOrder
+    resetPasswordExpires?: SortOrder
     atualizadoEm?: SortOrder
   }
 
@@ -8270,6 +8412,8 @@ export namespace Prisma {
     telefone?: SortOrder
     email?: SortOrder
     cnpj?: SortOrder
+    resetPasswordToken?: SortOrder
+    resetPasswordExpires?: SortOrder
     atualizadoEm?: SortOrder
   }
 
@@ -8310,6 +8454,37 @@ export namespace Prisma {
     _max?: NestedStringFilter<$PrismaModel>
   }
 
+  export type StringNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: string | StringFieldRefInput<$PrismaModel> | null
+    in?: string[] | null
+    notIn?: string[] | null
+    lt?: string | StringFieldRefInput<$PrismaModel>
+    lte?: string | StringFieldRefInput<$PrismaModel>
+    gt?: string | StringFieldRefInput<$PrismaModel>
+    gte?: string | StringFieldRefInput<$PrismaModel>
+    contains?: string | StringFieldRefInput<$PrismaModel>
+    startsWith?: string | StringFieldRefInput<$PrismaModel>
+    endsWith?: string | StringFieldRefInput<$PrismaModel>
+    not?: NestedStringNullableWithAggregatesFilter<$PrismaModel> | string | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _min?: NestedStringNullableFilter<$PrismaModel>
+    _max?: NestedStringNullableFilter<$PrismaModel>
+  }
+
+  export type DateTimeNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: Date | string | DateTimeFieldRefInput<$PrismaModel> | null
+    in?: Date[] | string[] | null
+    notIn?: Date[] | string[] | null
+    lt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    lte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    not?: NestedDateTimeNullableWithAggregatesFilter<$PrismaModel> | Date | string | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _min?: NestedDateTimeNullableFilter<$PrismaModel>
+    _max?: NestedDateTimeNullableFilter<$PrismaModel>
+  }
+
   export type DateTimeWithAggregatesFilter<$PrismaModel = never> = {
     equals?: Date | string | DateTimeFieldRefInput<$PrismaModel>
     in?: Date[] | string[]
@@ -8324,28 +8499,9 @@ export namespace Prisma {
     _max?: NestedDateTimeFilter<$PrismaModel>
   }
 
-  export type StringNullableFilter<$PrismaModel = never> = {
-    equals?: string | StringFieldRefInput<$PrismaModel> | null
-    in?: string[] | null
-    notIn?: string[] | null
-    lt?: string | StringFieldRefInput<$PrismaModel>
-    lte?: string | StringFieldRefInput<$PrismaModel>
-    gt?: string | StringFieldRefInput<$PrismaModel>
-    gte?: string | StringFieldRefInput<$PrismaModel>
-    contains?: string | StringFieldRefInput<$PrismaModel>
-    startsWith?: string | StringFieldRefInput<$PrismaModel>
-    endsWith?: string | StringFieldRefInput<$PrismaModel>
-    not?: NestedStringNullableFilter<$PrismaModel> | string | null
-  }
-
   export type RestauranteCadastroScalarRelationFilter = {
     is?: RestauranteCadastroWhereInput
     isNot?: RestauranteCadastroWhereInput
-  }
-
-  export type SortOrderInput = {
-    sort: SortOrder
-    nulls?: NullsOrder
   }
 
   export type UsuarioPerfilCountOrderByAggregateInput = {
@@ -8386,23 +8542,6 @@ export namespace Prisma {
   export type UsuarioPerfilSumOrderByAggregateInput = {
     id?: SortOrder
     restauranteId?: SortOrder
-  }
-
-  export type StringNullableWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: string | StringFieldRefInput<$PrismaModel> | null
-    in?: string[] | null
-    notIn?: string[] | null
-    lt?: string | StringFieldRefInput<$PrismaModel>
-    lte?: string | StringFieldRefInput<$PrismaModel>
-    gt?: string | StringFieldRefInput<$PrismaModel>
-    gte?: string | StringFieldRefInput<$PrismaModel>
-    contains?: string | StringFieldRefInput<$PrismaModel>
-    startsWith?: string | StringFieldRefInput<$PrismaModel>
-    endsWith?: string | StringFieldRefInput<$PrismaModel>
-    not?: NestedStringNullableWithAggregatesFilter<$PrismaModel> | string | null
-    _count?: NestedIntNullableFilter<$PrismaModel>
-    _min?: NestedStringNullableFilter<$PrismaModel>
-    _max?: NestedStringNullableFilter<$PrismaModel>
   }
 
   export type FloatFilter<$PrismaModel = never> = {
@@ -8489,6 +8628,17 @@ export namespace Prisma {
     _max?: NestedFloatFilter<$PrismaModel>
   }
 
+  export type FloatNullableFilter<$PrismaModel = never> = {
+    equals?: number | FloatFieldRefInput<$PrismaModel> | null
+    in?: number[] | null
+    notIn?: number[] | null
+    lt?: number | FloatFieldRefInput<$PrismaModel>
+    lte?: number | FloatFieldRefInput<$PrismaModel>
+    gt?: number | FloatFieldRefInput<$PrismaModel>
+    gte?: number | FloatFieldRefInput<$PrismaModel>
+    not?: NestedFloatNullableFilter<$PrismaModel> | number | null
+  }
+
   export type BoolFilter<$PrismaModel = never> = {
     equals?: boolean | BooleanFieldRefInput<$PrismaModel>
     not?: NestedBoolFilter<$PrismaModel> | boolean
@@ -8504,6 +8654,8 @@ export namespace Prisma {
     produtoId?: SortOrder
     restauranteId?: SortOrder
     quantidadeKg?: SortOrder
+    quantidadeUtilizada?: SortOrder
+    unidade?: SortOrder
     foiAproveitado?: SortOrder
     criadoEm?: SortOrder
   }
@@ -8513,6 +8665,7 @@ export namespace Prisma {
     produtoId?: SortOrder
     restauranteId?: SortOrder
     quantidadeKg?: SortOrder
+    quantidadeUtilizada?: SortOrder
   }
 
   export type RegistroImpactoMaxOrderByAggregateInput = {
@@ -8520,6 +8673,8 @@ export namespace Prisma {
     produtoId?: SortOrder
     restauranteId?: SortOrder
     quantidadeKg?: SortOrder
+    quantidadeUtilizada?: SortOrder
+    unidade?: SortOrder
     foiAproveitado?: SortOrder
     criadoEm?: SortOrder
   }
@@ -8529,6 +8684,8 @@ export namespace Prisma {
     produtoId?: SortOrder
     restauranteId?: SortOrder
     quantidadeKg?: SortOrder
+    quantidadeUtilizada?: SortOrder
+    unidade?: SortOrder
     foiAproveitado?: SortOrder
     criadoEm?: SortOrder
   }
@@ -8538,6 +8695,23 @@ export namespace Prisma {
     produtoId?: SortOrder
     restauranteId?: SortOrder
     quantidadeKg?: SortOrder
+    quantidadeUtilizada?: SortOrder
+  }
+
+  export type FloatNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: number | FloatFieldRefInput<$PrismaModel> | null
+    in?: number[] | null
+    notIn?: number[] | null
+    lt?: number | FloatFieldRefInput<$PrismaModel>
+    lte?: number | FloatFieldRefInput<$PrismaModel>
+    gt?: number | FloatFieldRefInput<$PrismaModel>
+    gte?: number | FloatFieldRefInput<$PrismaModel>
+    not?: NestedFloatNullableWithAggregatesFilter<$PrismaModel> | number | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _avg?: NestedFloatNullableFilter<$PrismaModel>
+    _sum?: NestedFloatNullableFilter<$PrismaModel>
+    _min?: NestedFloatNullableFilter<$PrismaModel>
+    _max?: NestedFloatNullableFilter<$PrismaModel>
   }
 
   export type BoolWithAggregatesFilter<$PrismaModel = never> = {
@@ -8657,6 +8831,14 @@ export namespace Prisma {
 
   export type StringFieldUpdateOperationsInput = {
     set?: string
+  }
+
+  export type NullableStringFieldUpdateOperationsInput = {
+    set?: string | null
+  }
+
+  export type NullableDateTimeFieldUpdateOperationsInput = {
+    set?: Date | string | null
   }
 
   export type DateTimeFieldUpdateOperationsInput = {
@@ -8789,10 +8971,6 @@ export namespace Prisma {
     connect?: RestauranteCadastroWhereUniqueInput
   }
 
-  export type NullableStringFieldUpdateOperationsInput = {
-    set?: string | null
-  }
-
   export type RestauranteCadastroUpdateOneRequiredWithoutUsuariosNestedInput = {
     create?: XOR<RestauranteCadastroCreateWithoutUsuariosInput, RestauranteCadastroUncheckedCreateWithoutUsuariosInput>
     connectOrCreate?: RestauranteCadastroCreateOrConnectWithoutUsuariosInput
@@ -8877,6 +9055,14 @@ export namespace Prisma {
     connect?: RestauranteCadastroWhereUniqueInput
   }
 
+  export type NullableFloatFieldUpdateOperationsInput = {
+    set?: number | null
+    increment?: number
+    decrement?: number
+    multiply?: number
+    divide?: number
+  }
+
   export type BoolFieldUpdateOperationsInput = {
     set?: boolean
   }
@@ -8936,6 +9122,31 @@ export namespace Prisma {
     not?: NestedStringFilter<$PrismaModel> | string
   }
 
+  export type NestedStringNullableFilter<$PrismaModel = never> = {
+    equals?: string | StringFieldRefInput<$PrismaModel> | null
+    in?: string[] | null
+    notIn?: string[] | null
+    lt?: string | StringFieldRefInput<$PrismaModel>
+    lte?: string | StringFieldRefInput<$PrismaModel>
+    gt?: string | StringFieldRefInput<$PrismaModel>
+    gte?: string | StringFieldRefInput<$PrismaModel>
+    contains?: string | StringFieldRefInput<$PrismaModel>
+    startsWith?: string | StringFieldRefInput<$PrismaModel>
+    endsWith?: string | StringFieldRefInput<$PrismaModel>
+    not?: NestedStringNullableFilter<$PrismaModel> | string | null
+  }
+
+  export type NestedDateTimeNullableFilter<$PrismaModel = never> = {
+    equals?: Date | string | DateTimeFieldRefInput<$PrismaModel> | null
+    in?: Date[] | string[] | null
+    notIn?: Date[] | string[] | null
+    lt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    lte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    not?: NestedDateTimeNullableFilter<$PrismaModel> | Date | string | null
+  }
+
   export type NestedDateTimeFilter<$PrismaModel = never> = {
     equals?: Date | string | DateTimeFieldRefInput<$PrismaModel>
     in?: Date[] | string[]
@@ -8991,34 +9202,6 @@ export namespace Prisma {
     _max?: NestedStringFilter<$PrismaModel>
   }
 
-  export type NestedDateTimeWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    in?: Date[] | string[]
-    notIn?: Date[] | string[]
-    lt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    lte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    gte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    not?: NestedDateTimeWithAggregatesFilter<$PrismaModel> | Date | string
-    _count?: NestedIntFilter<$PrismaModel>
-    _min?: NestedDateTimeFilter<$PrismaModel>
-    _max?: NestedDateTimeFilter<$PrismaModel>
-  }
-
-  export type NestedStringNullableFilter<$PrismaModel = never> = {
-    equals?: string | StringFieldRefInput<$PrismaModel> | null
-    in?: string[] | null
-    notIn?: string[] | null
-    lt?: string | StringFieldRefInput<$PrismaModel>
-    lte?: string | StringFieldRefInput<$PrismaModel>
-    gt?: string | StringFieldRefInput<$PrismaModel>
-    gte?: string | StringFieldRefInput<$PrismaModel>
-    contains?: string | StringFieldRefInput<$PrismaModel>
-    startsWith?: string | StringFieldRefInput<$PrismaModel>
-    endsWith?: string | StringFieldRefInput<$PrismaModel>
-    not?: NestedStringNullableFilter<$PrismaModel> | string | null
-  }
-
   export type NestedStringNullableWithAggregatesFilter<$PrismaModel = never> = {
     equals?: string | StringFieldRefInput<$PrismaModel> | null
     in?: string[] | null
@@ -9047,6 +9230,34 @@ export namespace Prisma {
     not?: NestedIntNullableFilter<$PrismaModel> | number | null
   }
 
+  export type NestedDateTimeNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: Date | string | DateTimeFieldRefInput<$PrismaModel> | null
+    in?: Date[] | string[] | null
+    notIn?: Date[] | string[] | null
+    lt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    lte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    not?: NestedDateTimeNullableWithAggregatesFilter<$PrismaModel> | Date | string | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _min?: NestedDateTimeNullableFilter<$PrismaModel>
+    _max?: NestedDateTimeNullableFilter<$PrismaModel>
+  }
+
+  export type NestedDateTimeWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    in?: Date[] | string[]
+    notIn?: Date[] | string[]
+    lt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    lte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    not?: NestedDateTimeWithAggregatesFilter<$PrismaModel> | Date | string
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedDateTimeFilter<$PrismaModel>
+    _max?: NestedDateTimeFilter<$PrismaModel>
+  }
+
   export type NestedFloatWithAggregatesFilter<$PrismaModel = never> = {
     equals?: number | FloatFieldRefInput<$PrismaModel>
     in?: number[]
@@ -9063,9 +9274,36 @@ export namespace Prisma {
     _max?: NestedFloatFilter<$PrismaModel>
   }
 
+  export type NestedFloatNullableFilter<$PrismaModel = never> = {
+    equals?: number | FloatFieldRefInput<$PrismaModel> | null
+    in?: number[] | null
+    notIn?: number[] | null
+    lt?: number | FloatFieldRefInput<$PrismaModel>
+    lte?: number | FloatFieldRefInput<$PrismaModel>
+    gt?: number | FloatFieldRefInput<$PrismaModel>
+    gte?: number | FloatFieldRefInput<$PrismaModel>
+    not?: NestedFloatNullableFilter<$PrismaModel> | number | null
+  }
+
   export type NestedBoolFilter<$PrismaModel = never> = {
     equals?: boolean | BooleanFieldRefInput<$PrismaModel>
     not?: NestedBoolFilter<$PrismaModel> | boolean
+  }
+
+  export type NestedFloatNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: number | FloatFieldRefInput<$PrismaModel> | null
+    in?: number[] | null
+    notIn?: number[] | null
+    lt?: number | FloatFieldRefInput<$PrismaModel>
+    lte?: number | FloatFieldRefInput<$PrismaModel>
+    gt?: number | FloatFieldRefInput<$PrismaModel>
+    gte?: number | FloatFieldRefInput<$PrismaModel>
+    not?: NestedFloatNullableWithAggregatesFilter<$PrismaModel> | number | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _avg?: NestedFloatNullableFilter<$PrismaModel>
+    _sum?: NestedFloatNullableFilter<$PrismaModel>
+    _min?: NestedFloatNullableFilter<$PrismaModel>
+    _max?: NestedFloatNullableFilter<$PrismaModel>
   }
 
   export type NestedBoolWithAggregatesFilter<$PrismaModel = never> = {
@@ -9174,6 +9412,8 @@ export namespace Prisma {
 
   export type RegistroImpactoCreateWithoutRestauranteInput = {
     quantidadeKg: number
+    quantidadeUtilizada?: number | null
+    unidade?: string | null
     foiAproveitado: boolean
     criadoEm?: Date | string
     produto: ProdutoCreateNestedOneWithoutRegistrosImpactoInput
@@ -9183,6 +9423,8 @@ export namespace Prisma {
     id?: number
     produtoId: number
     quantidadeKg: number
+    quantidadeUtilizada?: number | null
+    unidade?: string | null
     foiAproveitado: boolean
     criadoEm?: Date | string
   }
@@ -9315,6 +9557,8 @@ export namespace Prisma {
     produtoId?: IntFilter<"RegistroImpacto"> | number
     restauranteId?: IntFilter<"RegistroImpacto"> | number
     quantidadeKg?: FloatFilter<"RegistroImpacto"> | number
+    quantidadeUtilizada?: FloatNullableFilter<"RegistroImpacto"> | number | null
+    unidade?: StringNullableFilter<"RegistroImpacto"> | string | null
     foiAproveitado?: BoolFilter<"RegistroImpacto"> | boolean
     criadoEm?: DateTimeFilter<"RegistroImpacto"> | Date | string
   }
@@ -9326,6 +9570,8 @@ export namespace Prisma {
     telefone: string
     email: string
     cnpj: string
+    resetPasswordToken?: string | null
+    resetPasswordExpires?: Date | string | null
     atualizadoEm?: Date | string
     produtos?: ProdutoCreateNestedManyWithoutRestauranteInput
     itensListaCompras?: ItemListaComprasCreateNestedManyWithoutRestauranteInput
@@ -9340,6 +9586,8 @@ export namespace Prisma {
     telefone: string
     email: string
     cnpj: string
+    resetPasswordToken?: string | null
+    resetPasswordExpires?: Date | string | null
     atualizadoEm?: Date | string
     produtos?: ProdutoUncheckedCreateNestedManyWithoutRestauranteInput
     itensListaCompras?: ItemListaComprasUncheckedCreateNestedManyWithoutRestauranteInput
@@ -9369,6 +9617,8 @@ export namespace Prisma {
     telefone?: StringFieldUpdateOperationsInput | string
     email?: StringFieldUpdateOperationsInput | string
     cnpj?: StringFieldUpdateOperationsInput | string
+    resetPasswordToken?: NullableStringFieldUpdateOperationsInput | string | null
+    resetPasswordExpires?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     atualizadoEm?: DateTimeFieldUpdateOperationsInput | Date | string
     produtos?: ProdutoUpdateManyWithoutRestauranteNestedInput
     itensListaCompras?: ItemListaComprasUpdateManyWithoutRestauranteNestedInput
@@ -9383,6 +9633,8 @@ export namespace Prisma {
     telefone?: StringFieldUpdateOperationsInput | string
     email?: StringFieldUpdateOperationsInput | string
     cnpj?: StringFieldUpdateOperationsInput | string
+    resetPasswordToken?: NullableStringFieldUpdateOperationsInput | string | null
+    resetPasswordExpires?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     atualizadoEm?: DateTimeFieldUpdateOperationsInput | Date | string
     produtos?: ProdutoUncheckedUpdateManyWithoutRestauranteNestedInput
     itensListaCompras?: ItemListaComprasUncheckedUpdateManyWithoutRestauranteNestedInput
@@ -9396,6 +9648,8 @@ export namespace Prisma {
     telefone: string
     email: string
     cnpj: string
+    resetPasswordToken?: string | null
+    resetPasswordExpires?: Date | string | null
     atualizadoEm?: Date | string
     usuarios?: UsuarioPerfilCreateNestedManyWithoutRestauranteInput
     itensListaCompras?: ItemListaComprasCreateNestedManyWithoutRestauranteInput
@@ -9410,6 +9664,8 @@ export namespace Prisma {
     telefone: string
     email: string
     cnpj: string
+    resetPasswordToken?: string | null
+    resetPasswordExpires?: Date | string | null
     atualizadoEm?: Date | string
     usuarios?: UsuarioPerfilUncheckedCreateNestedManyWithoutRestauranteInput
     itensListaCompras?: ItemListaComprasUncheckedCreateNestedManyWithoutRestauranteInput
@@ -9423,6 +9679,8 @@ export namespace Prisma {
 
   export type RegistroImpactoCreateWithoutProdutoInput = {
     quantidadeKg: number
+    quantidadeUtilizada?: number | null
+    unidade?: string | null
     foiAproveitado: boolean
     criadoEm?: Date | string
     restaurante: RestauranteCadastroCreateNestedOneWithoutRegistrosImpactoInput
@@ -9432,6 +9690,8 @@ export namespace Prisma {
     id?: number
     restauranteId: number
     quantidadeKg: number
+    quantidadeUtilizada?: number | null
+    unidade?: string | null
     foiAproveitado: boolean
     criadoEm?: Date | string
   }
@@ -9463,6 +9723,8 @@ export namespace Prisma {
     telefone?: StringFieldUpdateOperationsInput | string
     email?: StringFieldUpdateOperationsInput | string
     cnpj?: StringFieldUpdateOperationsInput | string
+    resetPasswordToken?: NullableStringFieldUpdateOperationsInput | string | null
+    resetPasswordExpires?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     atualizadoEm?: DateTimeFieldUpdateOperationsInput | Date | string
     usuarios?: UsuarioPerfilUpdateManyWithoutRestauranteNestedInput
     itensListaCompras?: ItemListaComprasUpdateManyWithoutRestauranteNestedInput
@@ -9477,6 +9739,8 @@ export namespace Prisma {
     telefone?: StringFieldUpdateOperationsInput | string
     email?: StringFieldUpdateOperationsInput | string
     cnpj?: StringFieldUpdateOperationsInput | string
+    resetPasswordToken?: NullableStringFieldUpdateOperationsInput | string | null
+    resetPasswordExpires?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     atualizadoEm?: DateTimeFieldUpdateOperationsInput | Date | string
     usuarios?: UsuarioPerfilUncheckedUpdateManyWithoutRestauranteNestedInput
     itensListaCompras?: ItemListaComprasUncheckedUpdateManyWithoutRestauranteNestedInput
@@ -9540,6 +9804,8 @@ export namespace Prisma {
     telefone: string
     email: string
     cnpj: string
+    resetPasswordToken?: string | null
+    resetPasswordExpires?: Date | string | null
     atualizadoEm?: Date | string
     usuarios?: UsuarioPerfilCreateNestedManyWithoutRestauranteInput
     produtos?: ProdutoCreateNestedManyWithoutRestauranteInput
@@ -9554,6 +9820,8 @@ export namespace Prisma {
     telefone: string
     email: string
     cnpj: string
+    resetPasswordToken?: string | null
+    resetPasswordExpires?: Date | string | null
     atualizadoEm?: Date | string
     usuarios?: UsuarioPerfilUncheckedCreateNestedManyWithoutRestauranteInput
     produtos?: ProdutoUncheckedCreateNestedManyWithoutRestauranteInput
@@ -9623,6 +9891,8 @@ export namespace Prisma {
     telefone?: StringFieldUpdateOperationsInput | string
     email?: StringFieldUpdateOperationsInput | string
     cnpj?: StringFieldUpdateOperationsInput | string
+    resetPasswordToken?: NullableStringFieldUpdateOperationsInput | string | null
+    resetPasswordExpires?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     atualizadoEm?: DateTimeFieldUpdateOperationsInput | Date | string
     usuarios?: UsuarioPerfilUpdateManyWithoutRestauranteNestedInput
     produtos?: ProdutoUpdateManyWithoutRestauranteNestedInput
@@ -9637,6 +9907,8 @@ export namespace Prisma {
     telefone?: StringFieldUpdateOperationsInput | string
     email?: StringFieldUpdateOperationsInput | string
     cnpj?: StringFieldUpdateOperationsInput | string
+    resetPasswordToken?: NullableStringFieldUpdateOperationsInput | string | null
+    resetPasswordExpires?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     atualizadoEm?: DateTimeFieldUpdateOperationsInput | Date | string
     usuarios?: UsuarioPerfilUncheckedUpdateManyWithoutRestauranteNestedInput
     produtos?: ProdutoUncheckedUpdateManyWithoutRestauranteNestedInput
@@ -9650,6 +9922,8 @@ export namespace Prisma {
     telefone: string
     email: string
     cnpj: string
+    resetPasswordToken?: string | null
+    resetPasswordExpires?: Date | string | null
     atualizadoEm?: Date | string
     usuarios?: UsuarioPerfilCreateNestedManyWithoutRestauranteInput
     produtos?: ProdutoCreateNestedManyWithoutRestauranteInput
@@ -9664,6 +9938,8 @@ export namespace Prisma {
     telefone: string
     email: string
     cnpj: string
+    resetPasswordToken?: string | null
+    resetPasswordExpires?: Date | string | null
     atualizadoEm?: Date | string
     usuarios?: UsuarioPerfilUncheckedCreateNestedManyWithoutRestauranteInput
     produtos?: ProdutoUncheckedCreateNestedManyWithoutRestauranteInput
@@ -9693,6 +9969,8 @@ export namespace Prisma {
     telefone?: StringFieldUpdateOperationsInput | string
     email?: StringFieldUpdateOperationsInput | string
     cnpj?: StringFieldUpdateOperationsInput | string
+    resetPasswordToken?: NullableStringFieldUpdateOperationsInput | string | null
+    resetPasswordExpires?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     atualizadoEm?: DateTimeFieldUpdateOperationsInput | Date | string
     usuarios?: UsuarioPerfilUpdateManyWithoutRestauranteNestedInput
     produtos?: ProdutoUpdateManyWithoutRestauranteNestedInput
@@ -9707,6 +9985,8 @@ export namespace Prisma {
     telefone?: StringFieldUpdateOperationsInput | string
     email?: StringFieldUpdateOperationsInput | string
     cnpj?: StringFieldUpdateOperationsInput | string
+    resetPasswordToken?: NullableStringFieldUpdateOperationsInput | string | null
+    resetPasswordExpires?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     atualizadoEm?: DateTimeFieldUpdateOperationsInput | Date | string
     usuarios?: UsuarioPerfilUncheckedUpdateManyWithoutRestauranteNestedInput
     produtos?: ProdutoUncheckedUpdateManyWithoutRestauranteNestedInput
@@ -9752,6 +10032,8 @@ export namespace Prisma {
     id?: number
     produtoId: number
     quantidadeKg: number
+    quantidadeUtilizada?: number | null
+    unidade?: string | null
     foiAproveitado: boolean
     criadoEm?: Date | string
   }
@@ -9862,6 +10144,8 @@ export namespace Prisma {
 
   export type RegistroImpactoUpdateWithoutRestauranteInput = {
     quantidadeKg?: FloatFieldUpdateOperationsInput | number
+    quantidadeUtilizada?: NullableFloatFieldUpdateOperationsInput | number | null
+    unidade?: NullableStringFieldUpdateOperationsInput | string | null
     foiAproveitado?: BoolFieldUpdateOperationsInput | boolean
     criadoEm?: DateTimeFieldUpdateOperationsInput | Date | string
     produto?: ProdutoUpdateOneRequiredWithoutRegistrosImpactoNestedInput
@@ -9871,6 +10155,8 @@ export namespace Prisma {
     id?: IntFieldUpdateOperationsInput | number
     produtoId?: IntFieldUpdateOperationsInput | number
     quantidadeKg?: FloatFieldUpdateOperationsInput | number
+    quantidadeUtilizada?: NullableFloatFieldUpdateOperationsInput | number | null
+    unidade?: NullableStringFieldUpdateOperationsInput | string | null
     foiAproveitado?: BoolFieldUpdateOperationsInput | boolean
     criadoEm?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -9879,6 +10165,8 @@ export namespace Prisma {
     id?: IntFieldUpdateOperationsInput | number
     produtoId?: IntFieldUpdateOperationsInput | number
     quantidadeKg?: FloatFieldUpdateOperationsInput | number
+    quantidadeUtilizada?: NullableFloatFieldUpdateOperationsInput | number | null
+    unidade?: NullableStringFieldUpdateOperationsInput | string | null
     foiAproveitado?: BoolFieldUpdateOperationsInput | boolean
     criadoEm?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -9887,12 +10175,16 @@ export namespace Prisma {
     id?: number
     restauranteId: number
     quantidadeKg: number
+    quantidadeUtilizada?: number | null
+    unidade?: string | null
     foiAproveitado: boolean
     criadoEm?: Date | string
   }
 
   export type RegistroImpactoUpdateWithoutProdutoInput = {
     quantidadeKg?: FloatFieldUpdateOperationsInput | number
+    quantidadeUtilizada?: NullableFloatFieldUpdateOperationsInput | number | null
+    unidade?: NullableStringFieldUpdateOperationsInput | string | null
     foiAproveitado?: BoolFieldUpdateOperationsInput | boolean
     criadoEm?: DateTimeFieldUpdateOperationsInput | Date | string
     restaurante?: RestauranteCadastroUpdateOneRequiredWithoutRegistrosImpactoNestedInput
@@ -9902,6 +10194,8 @@ export namespace Prisma {
     id?: IntFieldUpdateOperationsInput | number
     restauranteId?: IntFieldUpdateOperationsInput | number
     quantidadeKg?: FloatFieldUpdateOperationsInput | number
+    quantidadeUtilizada?: NullableFloatFieldUpdateOperationsInput | number | null
+    unidade?: NullableStringFieldUpdateOperationsInput | string | null
     foiAproveitado?: BoolFieldUpdateOperationsInput | boolean
     criadoEm?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -9910,6 +10204,8 @@ export namespace Prisma {
     id?: IntFieldUpdateOperationsInput | number
     restauranteId?: IntFieldUpdateOperationsInput | number
     quantidadeKg?: FloatFieldUpdateOperationsInput | number
+    quantidadeUtilizada?: NullableFloatFieldUpdateOperationsInput | number | null
+    unidade?: NullableStringFieldUpdateOperationsInput | string | null
     foiAproveitado?: BoolFieldUpdateOperationsInput | boolean
     criadoEm?: DateTimeFieldUpdateOperationsInput | Date | string
   }

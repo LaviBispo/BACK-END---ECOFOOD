@@ -4,7 +4,8 @@ import prisma from '../lib/prismaClient';
 
 const router = Router();
 
-// Busca os dados do impacto
+// kg: registros de produtos em "kg".
+// unidades: registros de produtos em outras unidades.
 router.get("/:restauranteId", async (req: Request, res: Response) => {
     try {
         const restauranteId = Number(req.params.restauranteId);
@@ -15,43 +16,59 @@ router.get("/:restauranteId", async (req: Request, res: Response) => {
             });
         }
 
-        const prismaImpacto = prisma as any;
+        // Cada restaurante só enxerga o próprio impacto.
+        if (restauranteId !== req.restaurantId) {
+            return res.status(403).json({
+                error: "Acesso negado"
+            });
+        }
 
-        // Busca os registros de impacto do restaurante
-        const registros = await prismaImpacto.registroImpacto.findMany({
-            where: {
-                restauranteId: restauranteId
-            }
+        const registros = await prisma.registroImpacto.findMany({
+            where: { restauranteId }
         });
 
-        // Inicializa os valores
-        let alimentosSalvos = 0;
-        let desperdicioTotal = 0;
+        let kgAproveitados = 0;
+        let kgDesperdicados = 0;
+        let unidadesAproveitadas = 0;
+        let unidadesDesperdicadas = 0;
         let escolhasConscientes = 0;
-        let totalAlimentos = 0;
 
-        // Calcula os alimentos aproveitados e desperdiçados
         for (const registro of registros) {
-            const quantidade = Number(registro.quantidadeKg);
+            const ehKg =
+                !registro.unidade ||
+                registro.unidade.toLowerCase() === 'kg';
 
-            totalAlimentos += quantidade;
+            if (ehKg) {
+                const kg = Number(registro.quantidadeKg);
 
-            if (registro.foiAproveitado === true) {
-                alimentosSalvos += quantidade;
-                escolhasConscientes++;
+                if (registro.foiAproveitado) {
+                    kgAproveitados += kg;
+                } else {
+                    kgDesperdicados += kg;
+                }
             } else {
-                desperdicioTotal += quantidade;
+                const qtd = Number(registro.quantidadeUtilizada ?? 0);
+
+                if (registro.foiAproveitado) {
+                    unidadesAproveitadas += qtd;
+                } else {
+                    unidadesDesperdicadas += qtd;
+                }
+            }
+
+            if (registro.foiAproveitado) {
+                escolhasConscientes++;
             }
         }
 
-        // Calcula a porcentagem de redução de resíduos
-        let reducaoResiduos = 0;
+        const totalKg = kgAproveitados + kgDesperdicados;
 
-        if (totalAlimentos > 0) {
-            reducaoResiduos = (alimentosSalvos / totalAlimentos) * 100;
-        }
+        const reducaoResiduos =
+            totalKg > 0
+                ? (kgAproveitados / totalKg) * 100
+                : 0;
 
-        // Identifica o início da semana atual (segunda-feira)
+        // Início da semana atual (segunda-feira).
         const hoje = new Date();
         const inicioSemana = new Date(hoje);
         const diaSemana = hoje.getDay();
@@ -59,12 +76,14 @@ router.get("/:restauranteId", async (req: Request, res: Response) => {
         if (diaSemana === 0) {
             inicioSemana.setDate(hoje.getDate() - 6);
         } else {
-            inicioSemana.setDate(hoje.getDate() - (diaSemana - 1));
+            inicioSemana.setDate(
+                hoje.getDate() - (diaSemana - 1)
+            );
         }
 
         inicioSemana.setHours(0, 0, 0, 0);
 
-        // Calcula a evolução das últimas 5 semanas
+        // Evolução das últimas 5 semanas (kg).
         const semanas = [];
 
         for (let i = 4; i >= 0; i--) {
@@ -79,13 +98,20 @@ router.get("/:restauranteId", async (req: Request, res: Response) => {
 
             for (const registro of registros) {
                 const data = new Date(registro.criadoEm);
-                const quantidade = Number(registro.quantidadeKg);
+
+                const ehKg =
+                    !registro.unidade ||
+                    registro.unidade.toLowerCase() === 'kg';
+
+                if (!ehKg) continue;
 
                 if (data >= inicio && data < fim) {
-                    if (registro.foiAproveitado === true) {
-                        salvos += quantidade;
+                    const kg = Number(registro.quantidadeKg);
+
+                    if (registro.foiAproveitado) {
+                        salvos += kg;
                     } else {
-                        desperdicados += quantidade;
+                        desperdicados += kg;
                     }
                 }
             }
@@ -97,20 +123,23 @@ router.get("/:restauranteId", async (req: Request, res: Response) => {
             });
         }
 
-        // Retorna os resultados
-        res.json({
-            totalAlimentos: Number(totalAlimentos.toFixed(2)),
-            alimentosSalvos: Number(alimentosSalvos.toFixed(2)),
-            desperdicioTotal: Number(desperdicioTotal.toFixed(2)),
+        return res.json({
+            totalAlimentos: Number(totalKg.toFixed(2)),
+            alimentosSalvos: Number(kgAproveitados.toFixed(2)),
+            desperdicioTotal: Number(kgDesperdicados.toFixed(2)),
             reducaoResiduos: Number(reducaoResiduos.toFixed(2)),
-            escolhasConscientes: escolhasConscientes,
+            escolhasConscientes,
+            unidades: {
+                aproveitadas: Number(unidadesAproveitadas.toFixed(2)),
+                desperdicadas: Number(unidadesDesperdicadas.toFixed(2))
+            },
             evolucao: semanas
         });
 
     } catch (error) {
         console.log("ERROR:", error);
 
-        res.status(500).json({
+        return res.status(500).json({
             error: "Erro interno do servidor"
         });
     }
